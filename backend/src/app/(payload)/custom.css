@@ -1,0 +1,109 @@
+/* Scope ONLY to admin sidebar elements without overriding main page layout widths */
+
+aside.nav,
+.template-default__nav,
+nav.nav {
+  background-color: #050505 !important;
+  border-right: 1px solid #1c1c1e !important;
+}
+
+/* Nav Groups & Lists reset */
+aside.nav ul,
+aside.nav li {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+aside.nav li {
+  margin-bottom: 8px !important;
+}
+
+/* Links inside sidebar list items */
+aside.nav a.nav__link,
+aside.nav a.nav-group__link,
+aside.nav .nav-group a,
+aside.nav li > a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 10px 14px !important;
+  background-color: #0c0c0e !important;
+  border: 1px solid #27272a !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+}
+
+aside.nav a.nav__link:hover,
+aside.nav a.nav-group__link:hover,
+aside.nav .nav-group a:hover,
+aside.nav li > a:hover {
+  background-color: #18181b !important;
+  border-color: #52525b !important;
+  color: #ffffff !important;
+}
+
+aside.nav a.nav__link.active,
+aside.nav a.nav__link[aria-current="page"],
+aside.nav a.nav-group__link[aria-current="page"] {
+  background-color: #121215 !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* Icons inside nav links */
+aside.nav a svg {
+  width: 18px !important;
+  height: 18px !important;
+  color: #ffffff !important;
+  flex-shrink: 0 !important;
+}
+
+/* Group Labels */
+aside.nav .nav__label,
+aside.nav .nav-group__toggle {
+  color: #71717a !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Logout button */
+aside.nav a[href*="logout"],
+aside.nav button[class*="logout"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 10px 14px !important;
+  margin-top: 20px !important;
+  background-color: #0c0c0e !important;
+  border: 1px solid #7f1d1d !important;
+  border-radius: 8px !important;
+  color: #ef4444 !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+}
+
+aside.nav a[href*="logout"]:hover,
+aside.nav button[class*="logout"]:hover {
+  background-color: #1a0808 !important;
+  border-color: #ef4444 !important;
+  color: #f87171 !important;
+}
+
+aside.nav a[href*="logout"] svg,
+aside.nav button[class*="logout"] svg {
+  color: #ef4444 !important;
+}

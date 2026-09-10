@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors - Trazamapas Brand adapted to Navan Roles */
+  --color-brand-primary: #2C0054; /* Replaces Deep Iris */
+  --color-brand-secondary: #F4B92A; /* Replaces Vivid Iris */
+  
+  --color-cinder: #060000;
+  --color-graphite: #5a5a72;
+  --color-fog: #8d8da5;
+  --color-smoke: #70708f;
+  --color-mist-border: #c6c6d2;
+  
+  --color-canvas-tint: #f7f5f8;
+  --color-surface-white: #ffffff;
+  --color-surface-lift: #f8f8fd;
+  
+  --color-footer-bg: #2C0054;
+
+  /* Typography */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-editorial: var(--font-outfit), ui-serif, Georgia, serif;
+
+  /* Spacing Scale */
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-28: 28px;
+  --spacing-32: 32px;
+  --spacing-36: 36px;
+  --spacing-40: 40px;
+  --spacing-44: 44px;
+  --spacing-56: 56px;
+  --spacing-60: 60px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-140: 140px;
+
+  /* Border Radius */
+  --radius-md: 4px;
+  --radius-xl: 14px;
+  --radius-full: 9999px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f7f5f8;
+  color: var(--color-cinder);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
