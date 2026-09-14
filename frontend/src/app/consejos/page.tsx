@@ -3,7 +3,10 @@ import Link from "next/link";
 import { Compass, Sparkles, BookOpen, ArrowRight, Calendar } from "lucide-react";
 import { getPosts, getImageUrl, getCategoryName } from "@/lib/payload";
 
-export const revalidate = 0; // Dynamic server-side rendering on every request
+// ISR: Next.js guarda una copia estática de los posts.
+// Si el backend está caído, sirve la última versión cacheada.
+// Cuando el backend vuelva, regenera la página cada hora.
+export const revalidate = 3600;
 
 export default async function BlogPage() {
   const posts = await getPosts();

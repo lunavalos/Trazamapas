@@ -3,7 +3,10 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, User, Compass } from "lucide-react";
 import { getPostBySlug, getImageUrl } from "@/lib/payload";
 
-export const revalidate = 0; // Dynamic server-side rendering on every request
+// ISR: guarda una copia estática de cada post.
+// Si el backend está caído, sirve la última versión cacheada.
+// Cuando el backend vuelva, regenera la página cada hora.
+export const revalidate = 3600;
 
 // Helper to render rich text nodes from Lexical editor
 function renderLexicalNode(node: any, index: number) {
