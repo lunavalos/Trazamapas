@@ -26,7 +26,7 @@ export default function Navbar() {
               alt="TrazaMapas Logo" 
               width={210} 
               height={60} 
-              className="h-[44px] w-auto object-contain transition-transform group-hover:scale-105"
+              className="h-[60px] w-auto object-contain transition-transform group-hover:scale-105"
               priority
             />
           </Link>

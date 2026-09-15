@@ -25,8 +25,13 @@ const formatSlugHook =
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
+  labels: {
+    singular: 'Categoria de Post',
+    plural: 'Categorias de Post',
+  },
   admin: {
     useAsTitle: 'name',
+    group: 'Blog',
   },
   access: {
     read: () => true,
@@ -35,7 +40,7 @@ export const Categories: CollectionConfig = {
     {
       name: 'name',
       type: 'text',
-      label: 'Nombre de la Categoría',
+      label: 'Nombre de la Categoria',
       required: true,
     },
     {
@@ -46,7 +51,7 @@ export const Categories: CollectionConfig = {
       unique: true,
       admin: {
         position: 'sidebar',
-        description: 'Se genera automáticamente a partir del nombre de la categoría.',
+        description: 'Se genera automaticamente a partir del nombre.',
       },
       hooks: {
         beforeValidate: [formatSlugHook('name')],
@@ -55,7 +60,7 @@ export const Categories: CollectionConfig = {
     {
       name: 'description',
       type: 'textarea',
-      label: 'Descripción de la Categoría',
+      label: 'Descripcion de la Categoria',
     },
   ],
 };

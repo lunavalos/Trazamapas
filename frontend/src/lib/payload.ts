@@ -83,3 +83,67 @@ export async function getPostBySlug(slug: string): Promise<PayloadPost | null> {
     return null;
   }
 }
+
+export interface PayloadTripCategory {
+  id: string | number;
+  title: string;
+  value: string;
+  iconName?: string;
+  image?: any;
+}
+
+export interface PayloadTrip {
+  id: string | number;
+  title: string;
+  slug: string;
+  location: string;
+  duration: string;
+  bestTime: string;
+  shortDesc: string;
+  longDesc?: any;
+  features?: { feature: string; id?: string }[];
+  featuredImage?: any;
+  categories?: PayloadTripCategory[] | string[] | number[];
+}
+
+export async function getTrips(): Promise<PayloadTrip[]> {
+  try {
+    const res = await fetch(`${PAYLOAD_API_URL}/api/trips?depth=2&limit=100`, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.docs || [];
+  } catch (error) {
+    console.error('Error fetching trips:', error);
+    return [];
+  }
+}
+
+export async function getTripBySlug(slug: string): Promise<PayloadTrip | null> {
+  try {
+    const res = await fetch(`${PAYLOAD_API_URL}/api/trips?where[slug][equals]=${slug}&depth=2`, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.docs?.[0] || null;
+  } catch (error) {
+    console.error('Error fetching trip by slug:', error);
+    return null;
+  }
+}
+
+export async function getTripCategories(): Promise<PayloadTripCategory[]> {
+  try {
+    const res = await fetch(`${PAYLOAD_API_URL}/api/trip-categories?limit=100`, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.docs || [];
+  } catch (error) {
+    console.error('Error fetching trip categories:', error);
+    return [];
+  }
+}

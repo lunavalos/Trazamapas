@@ -71,6 +71,8 @@ export interface Config {
     media: Media;
     categories: Category;
     posts: Post;
+    'trip-categories': TripCategory;
+    trips: Trip;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,6 +84,8 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    'trip-categories': TripCategoriesSelect<false> | TripCategoriesSelect<true>;
+    trips: TripsSelect<false> | TripsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -202,7 +206,7 @@ export interface Category {
   id: number;
   name: string;
   /**
-   * Se genera automáticamente a partir del nombre de la categoría.
+   * Se genera automaticamente a partir del nombre.
    */
   slug?: string | null;
   description?: string | null;
@@ -290,6 +294,78 @@ export interface Post {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trip-categories".
+ */
+export interface TripCategory {
+  id: number;
+  title: string;
+  /**
+   * Se generara automaticamente (ej. parques, playas).
+   */
+  value?: string | null;
+  image: number | Media;
+  /**
+   * Selecciona el icono que aparecera en el boton del filtro
+   */
+  iconName?:
+    | (
+        | 'Globe2'
+        | 'Ticket'
+        | 'Palmtree'
+        | 'Compass'
+        | 'Ship'
+        | 'Plane'
+        | 'MapPin'
+        | 'CreditCard'
+        | 'FerrisWheel'
+        | 'RollerCoaster'
+        | 'Castle'
+      )
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trips".
+ */
+export interface Trip {
+  id: number;
+  title: string;
+  /**
+   * Se generara automaticamente de no ingresarse. (ej. mi-viaje)
+   */
+  slug: string;
+  categories: (number | TripCategory)[];
+  location: string;
+  duration: string;
+  bestTime: string;
+  featuredImage: number | Media;
+  shortDesc: string;
+  longDesc: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  features: {
+    feature: string;
+    id?: string | null;
+  }[];
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -327,6 +403,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'posts';
         value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'trip-categories';
+        value: number | TripCategory;
+      } | null)
+    | ({
+        relationTo: 'trips';
+        value: number | Trip;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -521,6 +605,41 @@ export interface PostsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trip-categories_select".
+ */
+export interface TripCategoriesSelect<T extends boolean = true> {
+  title?: T;
+  value?: T;
+  image?: T;
+  iconName?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trips_select".
+ */
+export interface TripsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  categories?: T;
+  location?: T;
+  duration?: T;
+  bestTime?: T;
+  featuredImage?: T;
+  shortDesc?: T;
+  longDesc?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -9,11 +9,15 @@ import { Users } from './collections/Users';
 import { Media } from './collections/Media';
 import { Categories } from './collections/Categories';
 import { Posts } from './collections/Posts';
+import { TripCategories } from './collections/TripCategories';
+import { Trips } from './collections/Trips';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 export default buildConfig({
+  cors: '*',
+  csrf: ['http://localhost:3000', 'http://localhost:3001'],
   admin: {
     user: Users.slug,
     meta: {
@@ -21,7 +25,7 @@ export default buildConfig({
       icons: [{ rel: 'icon', type: 'image/x-icon', url: '/images/favicon.ico' }],
     },
   },
-  collections: [Users, Media, Categories, Posts],
+  collections: [Users, Media, Categories, Posts, TripCategories, Trips],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || 'trazamapas-payload-secret-key-2026-secure',
   typescript: {
@@ -35,7 +39,7 @@ export default buildConfig({
   plugins: [
     seoPlugin({
       collections: ['posts'],
-      generateTitle: ({ doc }) => `${doc?.title?.val || doc?.title || 'Artículo'} | Blog TrazaMapas`,
+      generateTitle: ({ doc }) => `${doc?.title?.val || doc?.title || 'ArtÃ­culo'} | Blog TrazaMapas`,
       generateDescription: ({ doc }) => doc?.excerpt?.val || doc?.excerpt || 'Lee los mejores consejos de viaje en TrazaMapas.',
       uploadsCollection: 'media',
     }),

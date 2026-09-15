@@ -61,39 +61,39 @@ export default function HeroSlideshow() {
             priority={index === 0}
           />
           {/* Semi-transparent brand purple overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2C0054]/90 via-[#2C0054]/70 to-[#2C0054]/45" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2C0054]/80 via-transparent to-[#2C0054]/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2C0054]/65 via-[#2C0054]/40 to-[#2C0054]/15" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#2C0054]/50 via-transparent to-[#2C0054]/25" />
         </div>
       ))}
 
-      {/* Navigation Arrow Left - Large Pure Yellow Arrow */}
+      {/* Navigation Arrow Left */}
       <motion.button 
         whileHover={{ scale: 1.2 }}
         whileTap={{ scale: 0.9 }}
         onClick={handlePrev}
-        className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-30 text-[#F4B92A] transition-transform duration-200 cursor-pointer p-2 drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
+        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 text-[#F4B92A] transition-transform duration-200 cursor-pointer p-2 drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
         aria-label="Anterior diapositiva"
       >
-        <svg className="w-16 h-16 sm:w-20 sm:h-20 stroke-[3.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-24 h-24 sm:w-28 sm:h-28 md:w-20 md:h-20 stroke-[3.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
       </motion.button>
 
-      {/* Navigation Arrow Right - Large Pure Yellow Arrow */}
+      {/* Navigation Arrow Right */}
       <motion.button 
         whileHover={{ scale: 1.2 }}
         whileTap={{ scale: 0.9 }}
         onClick={handleNext}
-        className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-30 text-[#F4B92A] transition-transform duration-200 cursor-pointer p-2 drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
+        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 text-[#F4B92A] transition-transform duration-200 cursor-pointer p-2 drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
         aria-label="Siguiente diapositiva"
       >
-        <svg className="w-16 h-16 sm:w-20 sm:h-20 stroke-[3.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-24 h-24 sm:w-28 sm:h-28 md:w-20 md:h-20 stroke-[3.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
       </motion.button>
 
-      {/* Content Container with Left Alignment */}
-      <div className="relative z-10 max-w-[1280px] mx-auto w-full flex flex-col items-start text-left pl-8 sm:pl-12 lg:pl-16">
+      {/* Content Container */}
+      <div className="relative z-10 max-w-[1280px] mx-auto w-full flex flex-col items-start text-left pl-24 sm:pl-40 md:pl-36 lg:pl-28 pr-24 sm:pr-40 md:pr-36 lg:pr-28">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
@@ -103,6 +103,19 @@ export default function HeroSlideshow() {
             transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col items-start text-left max-w-4xl"
           >
+            {/* White logo — only on the first slide */}
+            {currentIndex === 0 && (
+              <Image
+                src="/images/trazamapas logo.webp"
+                alt="TrazaMapas"
+                width={320}
+                height={90}
+                className="h-[120px] sm:h-[140px] w-auto object-contain mb-1 drop-shadow-lg"
+                style={{ filter: 'brightness(0) invert(1)' }}
+                priority
+              />
+            )}
+
             {/* Title styled with Outfit font-bold, max 2 lines */}
             <h1 className="text-3xl sm:text-4xl lg:text-[50px] font-heading font-bold tracking-tight text-white mb-5 text-left leading-[1.18] drop-shadow-lg max-w-3xl">
               {SLIDES[currentIndex].title}

@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Send, CheckCircle2, User, Mail, Phone, MapPin, ArrowRight } from "lucide-react";
 
 interface QuoteFormSectionProps {
+  categories?: any[];
   variant?: "default" | "contactPage";
 }
 
-export default function QuoteFormSection({ variant = "default" }: QuoteFormSectionProps) {
+export default function QuoteFormSection({ variant = "default", categories = [] }: QuoteFormSectionProps) {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -19,6 +20,27 @@ export default function QuoteFormSection({ variant = "default" }: QuoteFormSecti
     message: "",
   });
 
+  const [dynamicCategories, setDynamicCategories] = useState<any[]>(categories);
+  
+  useEffect(() => {
+    if (categories.length > 0) {
+      setDynamicCategories(categories);
+    } else {
+      const url = process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3001";
+      fetch(url + "/api/trip-categories?limit=50")
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.docs) setDynamicCategories(data.docs);
+        })
+        .catch(err => console.error(err));
+    }
+  }, [categories]);
+
+  useEffect(() => {
+    if (dynamicCategories.length > 0 && formData.service.includes("Parques")) {
+      setFormData(prev => ({ ...prev, service: dynamicCategories[0].title }));
+    }
+  }, [dynamicCategories]);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
@@ -266,10 +288,14 @@ export default function QuoteFormSection({ variant = "default" }: QuoteFormSecti
                         onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                         className="w-full pl-10 pr-4 py-3.5 bg-[#f7f5f8] border border-[#2c0054]/15 rounded-[12px] text-sm text-cinder focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition appearance-none cursor-pointer"
                       >
-                        <option value="Parques Temáticos">Parques Temáticos</option>
-                        <option value="Playas & Todo Incluido">Playas & Todo Incluido</option>
-                        <option value="Circuitos Internacionales">Circuitos Internacionales</option>
-                        <option value="Cruceros & Servicios">Cruceros & Servicios</option>
+                        {dynamicCategories.length > 0 ? (
+                          dynamicCategories.map((cat, i) => (
+                            <option key={i} value={cat.title}>{cat.title}</option>
+                          ))
+                        ) : (
+                          <option value="General">Cotización General</option>
+                        )}
+                        <option value="Otro">Otro Destino</option>
                       </select>
                     </div>
                   </div>
@@ -522,10 +548,14 @@ export default function QuoteFormSection({ variant = "default" }: QuoteFormSecti
                         onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                         className="w-full pl-10 pr-4 py-3 bg-[#f7f5f8] border border-[#2c0054]/15 rounded-[12px] text-sm text-cinder focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition appearance-none cursor-pointer"
                       >
-                        <option value="Parques Temáticos">Parques Temáticos</option>
-                        <option value="Playas & Todo Incluido">Playas & Todo Incluido</option>
-                        <option value="Circuitos Internacionales">Circuitos Internacionales</option>
-                        <option value="Cruceros & Servicios">Cruceros & Servicios</option>
+                        {dynamicCategories.length > 0 ? (
+                          dynamicCategories.map((cat, i) => (
+                            <option key={i} value={cat.title}>{cat.title}</option>
+                          ))
+                        ) : (
+                          <option value="General">Cotización General</option>
+                        )}
+                        <option value="Otro">Otro Destino</option>
                       </select>
                     </div>
                   </div>

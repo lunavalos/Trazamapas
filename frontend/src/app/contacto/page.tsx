@@ -1,49 +1,10 @@
-"use client";
+import { getTripCategories } from '@/lib/payload';
+import ContactClient from './ContactClient';
 
-import Image from "next/image";
-import { motion } from "framer-motion";
-import QuoteFormSection from "@/components/QuoteFormSection";
+export const revalidate = 3600;
 
-export default function ContactoPage() {
-  return (
-    <main className="flex flex-col min-h-screen bg-[#f7f5f8]">
-      
-      {/* 1. HERO SECTION CONTACTO (Matching Disney Hero style) */}
-      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-20 sm:pb-24 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
-        {/* Background Image with Dark Purple Gradient Overlay */}
-        <div className="absolute inset-0 z-0">
-          <Image 
-            src="/images/04_desfile_personajes_disneyland_california.webp" 
-            alt="Contacto TrazaMapas Agencia de Viajes" 
-            fill 
-            className="object-cover object-center opacity-60"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2C0054]/95 via-[#2C0054]/80 to-[#2C0054]/50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2C0054]/90 via-transparent to-[#2C0054]/60" />
-        </div>
-
-        <div className="relative z-10 max-w-[1280px] mx-auto w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-3xl"
-          >
-            <h1 className="text-3xl sm:text-4xl lg:text-[45px] font-heading font-bold uppercase tracking-tight mb-4 leading-tight text-white">
-              Contacto & Cotizaciones
-            </h1>
-
-            <p className="text-white/90 text-[15px] sm:text-[16px] font-sans font-light leading-relaxed">
-              Estamos listos para hacer realidad tu próximo viaje. Escríbenos, llámanos o visítanos en nuestra sucursal al norte de Saltillo para diseñar juntos tu itinerario soñado.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 2. QUOTE & CONTACT FORM SECTION (Joined 2-Column Design) */}
-      <QuoteFormSection variant="contactPage" />
-
-    </main>
-  );
+export default async function ContactoPage() {
+  const categories = await getTripCategories();
+  
+  return <ContactClient categories={categories} />;
 }
