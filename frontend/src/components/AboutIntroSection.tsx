@@ -21,7 +21,7 @@ export default function AboutIntroSection() {
           >
             <div className="relative rounded-[24px] overflow-hidden shadow-xl border border-mist-border/60 h-[420px] sm:h-[480px]">
               <Image 
-                src="/images/02_castilo_aurora_disneyland_park_california.webp" 
+                src="/images/trazamapas equipo.JPG" 
                 alt="TrazaMapas Agencia de Viajes" 
                 fill 
                 className="object-cover"
@@ -31,10 +31,10 @@ export default function AboutIntroSection() {
               
               <div className="absolute bottom-6 left-6 right-6 text-white">
                 <p className="text-xs uppercase tracking-widest font-semibold text-[#F4B92A] mb-1">
-                  Nuestra Trayectoria
+                  Nuestro Equipo
                 </p>
                 <h3 className="text-xl sm:text-2xl font-heading font-bold">
-                  Fundados el 15 de Noviembre de 2019
+                  Expertos en crear experiencias inolvidables
                 </h3>
               </div>
             </div>
