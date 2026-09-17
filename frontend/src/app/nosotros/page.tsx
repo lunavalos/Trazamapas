@@ -71,7 +71,7 @@ export default function NosotrosPage() {
             >
               <div className="relative rounded-[24px] overflow-hidden shadow-xl border border-[#2c0054]/15 h-[380px] sm:h-[460px] group">
                 <Image 
-                  src="/images/02_castilo_aurora_disneyland_park_california.webp" 
+                  src="/images/trazamapas equipo.JPG" 
                   alt="TrazaMapas Saltillo" 
                   fill 
                   className="object-cover group-hover:scale-105 transition-transform duration-700" 

@@ -148,9 +148,8 @@ export default async function TripDetailPage({ params }: { params: Promise<{ slu
               {/* Right Column: Features List */}
               <div className="lg:col-span-1">
                 <div className="bg-[#2C0054]/5 rounded-[20px] p-6 border border-[#2c0054]/10 sticky top-28">
-                  <h4 className="font-heading font-bold text-lg text-[#2C0054] uppercase tracking-wide flex items-center gap-2 mb-5">
-                    <CheckCircle2 size={20} className="text-[#F4B92A]" />
-                    <span>Lo que Incluye:</span>
+                  <h4 className="font-heading font-bold text-lg text-[#2C0054] uppercase tracking-wide mb-5">
+                    Lo que Incluye:
                   </h4>
                   <ul className="space-y-4">
                     {trip.features?.map((feat, idx) => (
