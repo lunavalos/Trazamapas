@@ -24,6 +24,8 @@ export default function ServicesCarousel({ categories }: { categories: PayloadTr
 
   if (!categories || categories.length === 0) return null;
 
+  const isFourOrFewer = categories.length <= 4;
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-6">
@@ -47,7 +49,7 @@ export default function ServicesCarousel({ categories }: { categories: PayloadTr
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex items-center gap-2.5 shrink-0"
+          className={`flex items-center gap-2.5 shrink-0 ${isFourOrFewer ? 'lg:hidden' : ''}`}
         >
           <button 
             onClick={scrollLeft}
@@ -66,11 +68,15 @@ export default function ServicesCarousel({ categories }: { categories: PayloadTr
         </motion.div>
       </div>
 
-      {/* Carousel Container */}
+      {/* Carousel / Grid Container */}
       <div className="relative -mx-5 sm:mx-0 px-5 sm:px-0">
         <div 
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-8 overflow-y-hidden"
+          className={`flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-8 overflow-y-hidden ${
+            isFourOrFewer
+              ? 'lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible lg:pb-0'
+              : ''
+          }`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {categories.map((cat, index) => (
@@ -80,7 +86,11 @@ export default function ServicesCarousel({ categories }: { categories: PayloadTr
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="min-w-[85vw] sm:min-w-[320px] max-w-[320px] snap-start shrink-0 group"
+              className={`snap-start shrink-0 group ${
+                isFourOrFewer
+                  ? 'min-w-[85vw] sm:min-w-[300px] lg:min-w-0 lg:max-w-none w-full'
+                  : 'min-w-[85vw] sm:min-w-[320px] max-w-[320px]'
+              }`}
             >
               <Link href={`/viajes?categoria=${cat.value}`} className="block relative h-[450px] rounded-[24px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer border border-[#2c0054]/10 bg-black">
                 {/* Background Image */}

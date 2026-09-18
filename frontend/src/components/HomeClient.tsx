@@ -75,7 +75,7 @@ export default function HomeClient({ trips, categories }: { trips: PayloadTrip[]
       <FeaturedRoutesSection trips={trips} />
       
       {/* 4. Quote Request Form Section */}
-      <QuoteFormSection categories={categories} />
+      <QuoteFormSection categories={categories} trips={trips} />
     </main>
   );
 }

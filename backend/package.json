@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "predev": "payload generate:importmap",
     "build": "next build",
     "prebuild": "payload generate:importmap",
-    "start": "next start",
+    "start": "next start -p 3001",
     "lint": "eslint",
     "payload": "payload",
     "generate:types": "payload generate:types",

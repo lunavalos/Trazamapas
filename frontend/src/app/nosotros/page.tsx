@@ -25,17 +25,16 @@ export default function NosotrosPage() {
       
       {/* 1. HERO SECTION FOR NOSOTROS (Matching Disney Hero style) */}
       <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-20 sm:pb-24 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
-        {/* Background Image with Dark Purple Gradient Overlay */}
+        {/* Background Image with 0.5 Overlay */}
         <div className="absolute inset-0 z-0">
           <Image 
             src="/images/04_desfile_personajes_disneyland_california.webp" 
             alt="TrazaMapas Agencia de Viajes" 
             fill 
-            className="object-cover object-center opacity-60"
+            className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2C0054]/95 via-[#2C0054]/80 to-[#2C0054]/50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2C0054]/90 via-transparent to-[#2C0054]/60" />
+          <div className="absolute inset-0 bg-[#2C0054]/50" />
         </div>
 
         <div className="relative z-10 max-w-[1280px] mx-auto w-full">

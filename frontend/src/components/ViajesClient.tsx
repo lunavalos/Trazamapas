@@ -62,11 +62,10 @@ function ViajesContent({
             src="/images/03_ tianas_bayou_adenture_disneyland_park_california.webp" 
             alt="Viajes TrazaMapas" 
             fill 
-            className="object-cover object-center opacity-60"
+            className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2C0054]/95 via-[#2C0054]/80 to-[#2C0054]/50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2C0054]/90 via-transparent to-[#2C0054]/60" />
+          <div className="absolute inset-0 bg-[#2C0054]/50" />
         </div>
         <div className="relative z-10 max-w-[1280px] mx-auto w-full">
           <div className="max-w-3xl animate-fadeIn">
@@ -121,7 +120,7 @@ function ViajesContent({
                 className="bg-surface-white border border-[#2c0054]/10 rounded-[24px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group"
               >
                 {/* Image Container */}
-                <div className="relative h-[220px] sm:h-[240px] w-full overflow-hidden">
+                <Link href={`/viajes/${exp.slug}`} className="relative h-[220px] sm:h-[240px] w-full overflow-hidden block cursor-pointer">
                   <Image
                     src={getImageUrl(exp.featuredImage)}
                     alt={exp.title}
@@ -131,17 +130,19 @@ function ViajesContent({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   
-                  {/* Highlight Location Tag (Yellow) */}
-                  <div className="absolute bottom-4 left-4 max-w-[calc(100%-2rem)] bg-[#F4B92A] text-[#2C0054] text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-sm flex items-center gap-1.5">
+                  {/* Highlight Location Tag (Yellow) - Top Right */}
+                  <div className="absolute top-4 right-4 z-10 max-w-[calc(100%-2rem)] bg-[#F4B92A] text-[#2C0054] text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-sm flex items-center gap-1.5">
                     <MapPin size={12} className="text-[#2C0054] shrink-0" />
                     <span className="truncate">{exp.location}</span>
                   </div>
-                </div>
+                </Link>
 
                 {/* Card Content */}
                 <div className="p-6 sm:p-7 flex flex-col flex-1">
                   <h3 className="text-xl font-heading font-bold text-[#2C0054] mb-3 leading-snug line-clamp-2">
-                    {exp.title}
+                    <Link href={`/viajes/${exp.slug}`} className="hover:text-[#F4B92A] transition-colors">
+                      {exp.title}
+                    </Link>
                   </h3>
                   
                   <p className="text-smoke text-[14px] font-sans font-light leading-relaxed mb-6 line-clamp-3 flex-1">

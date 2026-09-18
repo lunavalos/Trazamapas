@@ -75,6 +75,16 @@ export const Trips: CollectionConfig = {
       label: 'Imagen Principal',
     },
     {
+      name: 'gallery',
+      type: 'upload',
+      relationTo: 'media',
+      hasMany: true,
+      label: 'Galería de Imágenes',
+      admin: {
+        description: 'Imágenes complementarias para la galería del viaje.',
+      },
+    },
+    {
       name: 'shortDesc',
       type: 'textarea',
       required: true,

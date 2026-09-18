@@ -341,6 +341,10 @@ export interface Trip {
   duration: string;
   bestTime: string;
   featuredImage: number | Media;
+  /**
+   * Imágenes complementarias para la galería del viaje.
+   */
+  gallery?: (number | Media)[] | null;
   shortDesc: string;
   longDesc: {
     root: {
@@ -630,6 +634,7 @@ export interface TripsSelect<T extends boolean = true> {
   duration?: T;
   bestTime?: T;
   featuredImage?: T;
+  gallery?: T;
   shortDesc?: T;
   longDesc?: T;
   features?:

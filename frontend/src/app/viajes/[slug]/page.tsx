@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { ArrowLeft, Calendar, MapPin, Clock, CheckCircle2 } from 'lucide-react';
 import { getTripBySlug, getImageUrl } from '@/lib/payload';
 import CtaSection from '@/components/CtaSection';
+import TripGallery from '@/components/TripGallery';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 function renderLexicalNode(node: any, index: number) {
   if (!node) return null;
@@ -76,17 +77,17 @@ export default async function TripDetailPage({ params }: { params: Promise<{ slu
   return (
     <main className="flex flex-col min-h-screen bg-[#f7f5f8]">
       {/* HERO SECTION */}
-      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-16 sm:pb-20 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden flex items-center min-h-[420px]">
+      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-16 sm:pb-20 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden flex items-center min-h-[70vh]">
         <div className="absolute inset-0 z-0">
           <Image 
             src={imageUrl} 
             alt={trip.title} 
             fill 
             unoptimized
-            className="object-cover object-center opacity-60"
+            className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2C0054]/95 via-[#2C0054]/80 to-[#2C0054]/50" />
+          <div className="absolute inset-0 bg-[#2C0054]/50" />
         </div>
 
         <div className="relative z-10 max-w-[1280px] mx-auto w-full">
@@ -112,12 +113,12 @@ export default async function TripDetailPage({ params }: { params: Promise<{ slu
       </section>
 
       {/* ARTICLE CONTENT BODY */}
-      <section className="py-12 sm:py-16 px-5 sm:px-8 relative bg-[#f7f5f8]">
+      <section className="pt-12 sm:pt-16 pb-0 px-5 sm:px-8 relative bg-[#f7f5f8]">
         <div className="max-w-[1280px] mx-auto">
-          <div className="bg-white border border-[#2c0054]/10 rounded-[24px] p-6 sm:p-10 lg:p-24 shadow-sm mb-12">
+          <div className="bg-white border border-[#2c0054]/10 rounded-[24px] p-6 sm:p-10 lg:p-12 shadow-sm">
             
             {/* Meta Bar */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5 bg-[#f7f5f8] rounded-[16px] border border-[#2c0054]/10 mb-24">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5 bg-[#f7f5f8] rounded-[16px] border border-[#2c0054]/10 mb-8 sm:mb-10">
               <div className="flex items-center gap-3 text-sm text-cinder font-sans">
                 <Clock size={20} className="text-brand-primary shrink-0" />
                 <div>
@@ -163,10 +164,15 @@ export default async function TripDetailPage({ params }: { params: Promise<{ slu
               </div>
 
             </div>
+
           </div>
         </div>
       </section>
 
+      {/* GALLERY SECTION (Between Content and CTA - Only rendered if at least 1 image is added) */}
+      <TripGallery images={trip.gallery || []} tripTitle={trip.title} />
+
+      {/* CTA SECTION */}
       <CtaSection />
       
     </main>

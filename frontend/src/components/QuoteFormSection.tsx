@@ -1,46 +1,325 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Send, CheckCircle2, User, Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import { 
+  Send, 
+  CheckCircle2, 
+  User, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  ArrowRight,
+  Search,
+  X,
+  Check,
+  ChevronDown,
+  Compass,
+  Sparkles
+} from "lucide-react";
+import { PayloadTrip, getImageUrl } from "@/lib/payload";
+
+interface TripSearchComboboxProps {
+  value: string;
+  onChange: (value: string, trip?: PayloadTrip | null) => void;
+  trips: PayloadTrip[];
+  pyClass?: string;
+  required?: boolean;
+}
+
+function TripThumbnail({ trip }: { trip: PayloadTrip }) {
+  const [hasError, setHasError] = useState(false);
+  const imageUrl = getImageUrl(trip.featuredImage);
+
+  if (hasError || !imageUrl) {
+    return (
+      <div className="w-10 h-10 rounded-lg bg-[#2C0054]/10 flex items-center justify-center shrink-0 border border-[#2C0054]/15 text-brand-primary">
+        <MapPin size={18} className="text-[#F4B92A]" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative bg-gray-100 border border-black/5">
+      <Image
+        src={imageUrl}
+        alt=""
+        fill
+        unoptimized
+        onError={() => setHasError(true)}
+        className="object-cover group-hover:scale-105 transition-transform duration-300"
+        sizes="40px"
+      />
+    </div>
+  );
+}
+
+function TripSearchCombobox({
+  value,
+  onChange,
+  trips = [],
+  pyClass = "py-3.5",
+  required = true,
+}: TripSearchComboboxProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [query, setQuery] = useState(value || "");
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setQuery(value || "");
+  }, [value]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const filteredTrips = trips.filter((trip) => {
+    if (!query.trim()) return true;
+    const q = query.toLowerCase().trim();
+    const matchTitle = trip.title?.toLowerCase().includes(q);
+    const matchLocation = trip.location?.toLowerCase().includes(q);
+    const matchCategory = Array.isArray(trip.categories)
+      ? trip.categories.some((c: any) =>
+          (c?.title || c?.name || c)?.toLowerCase?.().includes(q)
+        )
+      : false;
+    return matchTitle || matchLocation || matchCategory;
+  });
+
+  const selectedTrip = trips.find(
+    (t) => t.title.toLowerCase().trim() === value.toLowerCase().trim()
+  );
+
+  const handleSelectTrip = (trip: PayloadTrip) => {
+    setQuery(trip.title);
+    onChange(trip.title, trip);
+    setIsOpen(false);
+  };
+
+  const handleSelectCustom = (customText: string) => {
+    const text = customText.trim() || "Destino personalizado";
+    setQuery(text);
+    onChange(text, null);
+    setIsOpen(false);
+  };
+
+  const handleClear = () => {
+    setQuery("");
+    onChange("", null);
+    setIsOpen(true);
+  };
+
+  return (
+    <div ref={containerRef} className="relative w-full">
+      <div className="relative flex items-center">
+        <Search
+          size={18}
+          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-primary/50 pointer-events-none z-10"
+        />
+        <input
+          type="text"
+          required={required}
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-autocomplete="list"
+          aria-label="Buscar viaje o destino de interés"
+          placeholder="Buscar viaje disponible (ej. Bahamas, Disney, Cancún)..."
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            onChange(e.target.value, null);
+            setIsOpen(true);
+          }}
+          onFocus={() => setIsOpen(true)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setIsOpen(false);
+          }}
+          className={`w-full pl-10 pr-16 ${pyClass} bg-[#f7f5f8] border border-[#2c0054]/15 rounded-[12px] text-sm text-cinder focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition`}
+        />
+
+        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
+          {query && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="p-1 rounded-full text-smoke hover:text-brand-primary hover:bg-brand-primary/10 transition cursor-pointer"
+              title="Limpiar búsqueda"
+              aria-label="Limpiar búsqueda"
+            >
+              <X size={15} />
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="p-1 text-brand-primary/60 hover:text-brand-primary transition cursor-pointer"
+            aria-label="Mostrar lista de viajes disponibles"
+          >
+            <ChevronDown
+              size={18}
+              className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+            />
+          </button>
+        </div>
+      </div>
+
+      {/* Selected Trip Details Badge */}
+      {selectedTrip && !isOpen && (
+        <div className="mt-1.5 flex items-center gap-1.5 text-xs text-brand-primary font-medium pl-1">
+          <MapPin size={13} className="text-[#F4B92A] shrink-0" />
+          <span className="truncate">Destino: {selectedTrip.location}</span>
+          {selectedTrip.duration && (
+            <span className="text-smoke">({selectedTrip.duration})</span>
+          )}
+        </div>
+      )}
+
+      {/* Dropdown Suggestions */}
+      {isOpen && (
+        <div className="absolute left-0 right-0 top-full mt-2 bg-white rounded-[16px] border border-[#2c0054]/15 shadow-2xl overflow-hidden z-50 animate-in fade-in duration-150">
+          {/* Header count */}
+          <div className="px-3.5 py-2 bg-[#f7f5f8] border-b border-[#2c0054]/10 flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-brand-primary/80">
+            <span className="flex items-center gap-1.5">
+              <Compass size={13} className="text-[#F4B92A]" />
+              Viajes Disponibles ({filteredTrips.length})
+            </span>
+            <span className="text-[10px] text-smoke font-normal lowercase">
+              selecciona o escribe
+            </span>
+          </div>
+
+          {/* List of trips */}
+          <div className="max-h-64 overflow-y-auto divide-y divide-gray-100">
+            {filteredTrips.length > 0 ? (
+              filteredTrips.map((trip) => {
+                const isCurrent = trip.title.toLowerCase().trim() === value.toLowerCase().trim();
+                return (
+                  <button
+                    key={trip.id}
+                    type="button"
+                    onClick={() => handleSelectTrip(trip)}
+                    className={`w-full px-3.5 py-2.5 flex items-center gap-3 text-left transition group cursor-pointer ${
+                      isCurrent ? "bg-[#2C0054]/10 text-brand-primary" : "hover:bg-[#2C0054]/5 text-cinder"
+                    }`}
+                  >
+                    {/* Thumbnail with fallback */}
+                    <TripThumbnail trip={trip} />
+
+                    {/* Details */}
+                    <div className="flex-1 min-w-0">
+                      <div className="font-heading font-bold text-xs sm:text-sm text-brand-primary group-hover:text-[#3d0075] truncate">
+                        {trip.title}
+                      </div>
+                      <div className="flex items-center gap-2 text-[11px] text-smoke mt-0.5">
+                        <span className="flex items-center gap-1 truncate">
+                          <MapPin size={11} className="text-[#F4B92A] shrink-0" />
+                          {trip.location}
+                        </span>
+                        {trip.duration && (
+                          <span className="shrink-0 text-smoke/70 hidden sm:inline">• {trip.duration}</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Checkmark or arrow */}
+                    {isCurrent ? (
+                      <div className="w-6 h-6 rounded-full bg-brand-primary text-[#F4B92A] flex items-center justify-center shrink-0 shadow-xs">
+                        <Check size={13} strokeWidth={3} />
+                      </div>
+                    ) : (
+                      <ArrowRight
+                        size={15}
+                        className="text-brand-primary/30 group-hover:text-brand-primary group-hover:translate-x-0.5 transition-all shrink-0"
+                      />
+                    )}
+                  </button>
+                );
+              })
+            ) : (
+              <div className="p-4 text-center">
+                <p className="text-xs text-smoke">
+                  No encontramos un viaje registrado para &ldquo;<span className="font-semibold text-cinder">{query}</span>&rdquo;.
+                </p>
+                <p className="text-[11px] text-brand-primary mt-1 font-medium">
+                  ¡No te preocupes! Podemos cotizar cualquier destino personalizado.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Custom Destination Option Footer */}
+          <button
+            type="button"
+            onClick={() => handleSelectCustom(query)}
+            className="w-full px-4 py-2.5 bg-gradient-to-r from-[#2C0054]/5 to-[#F4B92A]/10 hover:from-[#2C0054]/10 hover:to-[#F4B92A]/20 text-brand-primary flex items-center justify-between text-xs font-semibold border-t border-[#2c0054]/10 transition cursor-pointer"
+          >
+            <div className="flex items-center gap-2 truncate">
+              <Sparkles size={14} className="text-[#F4B92A] shrink-0" />
+              <span className="truncate">
+                {query.trim()
+                  ? `Cotizar destino personalizado: "${query.trim()}"`
+                  : "Cotizar otro destino personalizado"}
+              </span>
+            </div>
+            <ArrowRight size={14} className="text-brand-primary shrink-0 ml-2" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface QuoteFormSectionProps {
   categories?: any[];
+  trips?: PayloadTrip[];
   variant?: "default" | "contactPage";
 }
 
-export default function QuoteFormSection({ variant = "default", categories = [] }: QuoteFormSectionProps) {
+export default function QuoteFormSection({ 
+  variant = "default", 
+  categories = [], 
+  trips = [] 
+}: QuoteFormSectionProps) {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    service: "Parques Temáticos",
+    service: "",
     message: "",
   });
 
-  const [dynamicCategories, setDynamicCategories] = useState<any[]>(categories);
-  
-  useEffect(() => {
-    if (categories.length > 0) {
-      setDynamicCategories(categories);
-    } else {
-      const url = process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3001";
-      fetch(url + "/api/trip-categories?limit=50")
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.docs) setDynamicCategories(data.docs);
-        })
-        .catch(err => console.error(err));
-    }
-  }, [categories]);
+  const [fetchedTrips, setFetchedTrips] = useState<PayloadTrip[]>([]);
 
   useEffect(() => {
-    if (dynamicCategories.length > 0 && formData.service.includes("Parques")) {
-      setFormData(prev => ({ ...prev, service: dynamicCategories[0].title }));
+    if (!trips || trips.length === 0) {
+      const url = process.env.NEXT_PUBLIC_PAYLOAD_URL || "http://localhost:3001";
+      fetch(`${url}/api/trips?depth=2&limit=100`)
+        .then(async (res) => {
+          if (!res.ok) {
+            return null;
+          }
+          const contentType = res.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            return null;
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (data && data.docs) setFetchedTrips(data.docs);
+        })
+        .catch((err) => console.error("Error loading trips in QuoteFormSection:", err));
     }
-  }, [dynamicCategories]);
+  }, [trips]);
+
+  const availableTrips = trips && trips.length > 0 ? trips : fetchedTrips;
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
@@ -276,28 +555,18 @@ export default function QuoteFormSection({ variant = "default", categories = [] 
                     </div>
                   </div>
 
-                  {/* Service Selection Dropdown */}
+                  {/* Trip / Service Searchable Combobox */}
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-brand-primary mb-2.5">
-                      Servicio o Destino de Interés *
+                      Viaje o Destino de Interés *
                     </label>
-                    <div className="relative">
-                      <MapPin size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-primary/50" />
-                      <select
-                        value={formData.service}
-                        onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                        className="w-full pl-10 pr-4 py-3.5 bg-[#f7f5f8] border border-[#2c0054]/15 rounded-[12px] text-sm text-cinder focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition appearance-none cursor-pointer"
-                      >
-                        {dynamicCategories.length > 0 ? (
-                          dynamicCategories.map((cat, i) => (
-                            <option key={i} value={cat.title}>{cat.title}</option>
-                          ))
-                        ) : (
-                          <option value="General">Cotización General</option>
-                        )}
-                        <option value="Otro">Otro Destino</option>
-                      </select>
-                    </div>
+                    <TripSearchCombobox
+                      value={formData.service}
+                      onChange={(val) => setFormData({ ...formData, service: val })}
+                      trips={availableTrips}
+                      pyClass="py-3.5"
+                      required
+                    />
                   </div>
 
                   {/* Message / Details Field */}
@@ -536,28 +805,18 @@ export default function QuoteFormSection({ variant = "default", categories = [] 
                     </div>
                   </div>
 
-                  {/* Service Selection Dropdown */}
+                  {/* Trip / Service Searchable Combobox */}
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-brand-primary mb-2">
-                      Servicio o Destino de Interés *
+                      Viaje o Destino de Interés *
                     </label>
-                    <div className="relative">
-                      <MapPin size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-primary/50" />
-                      <select
-                        value={formData.service}
-                        onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                        className="w-full pl-10 pr-4 py-3 bg-[#f7f5f8] border border-[#2c0054]/15 rounded-[12px] text-sm text-cinder focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition appearance-none cursor-pointer"
-                      >
-                        {dynamicCategories.length > 0 ? (
-                          dynamicCategories.map((cat, i) => (
-                            <option key={i} value={cat.title}>{cat.title}</option>
-                          ))
-                        ) : (
-                          <option value="General">Cotización General</option>
-                        )}
-                        <option value="Otro">Otro Destino</option>
-                      </select>
-                    </div>
+                    <TripSearchCombobox
+                      value={formData.service}
+                      onChange={(val) => setFormData({ ...formData, service: val })}
+                      trips={availableTrips}
+                      pyClass="py-3"
+                      required
+                    />
                   </div>
 
                   {/* Message / Details Field */}

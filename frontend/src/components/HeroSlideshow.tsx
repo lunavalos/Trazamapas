@@ -60,9 +60,8 @@ export default function HeroSlideshow() {
             className="object-cover"
             priority={index === 0}
           />
-          {/* Semi-transparent brand purple overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2C0054]/65 via-[#2C0054]/40 to-[#2C0054]/15" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2C0054]/50 via-transparent to-[#2C0054]/25" />
+          {/* Semi-transparent brand purple overlay 0.5 */}
+          <div className="absolute inset-0 bg-[#2C0054]/50" />
         </div>
       ))}
 

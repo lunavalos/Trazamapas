@@ -1,12 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Compass, Sparkles, BookOpen, ArrowRight, Calendar } from "lucide-react";
+import { Compass, Sparkles, BookOpen, ArrowRight, Calendar, User } from "lucide-react";
 import { getPosts, getImageUrl, getCategoryName } from "@/lib/payload";
 
 // ISR: Next.js guarda una copia estática de los posts.
 // Si el backend está caído, sirve la última versión cacheada.
 // Cuando el backend vuelva, regenera la página cada hora.
 export const revalidate = 3600;
+
+function formatDateDDMMYYYY(dateString?: string): string | null {
+  if (!dateString) return null;
+  const d = new Date(dateString);
+  if (isNaN(d.getTime())) return null;
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+}
 
 export default async function BlogPage() {
   const posts = await getPosts();
@@ -16,17 +26,16 @@ export default async function BlogPage() {
       
       {/* 1. HERO SECTION BLOG */}
       <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-20 sm:pb-24 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
-        {/* Background Image with Dark Purple Gradient Overlay */}
+        {/* Background Image with 0.5 Overlay */}
         <div className="absolute inset-0 z-0">
           <Image 
             src="/images/04_desfile_personajes_disneyland_california.webp" 
             alt="Blog TrazaMapas Consejos de Viaje" 
             fill 
-            className="object-cover object-center opacity-60"
+            className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2C0054]/95 via-[#2C0054]/80 to-[#2C0054]/50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2C0054]/90 via-transparent to-[#2C0054]/60" />
+          <div className="absolute inset-0 bg-[#2C0054]/50" />
         </div>
 
         <div className="relative z-10 max-w-[1280px] mx-auto w-full">
@@ -50,13 +59,10 @@ export default async function BlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {posts.map((post, index) => {
                 const imageUrl = getImageUrl(post.featuredImage);
-                const formattedDate = post.publishedAt 
-                  ? new Date(post.publishedAt).toLocaleDateString('es-MX', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric'
-                    })
-                  : null;
+                const formattedDate = formatDateDDMMYYYY(post.publishedAt);
+                const authorName = typeof post.author === 'object' && post.author?.name 
+                  ? post.author.name 
+                  : 'Asesor TrazaMapas';
 
                 return (
                   <article
@@ -76,10 +82,23 @@ export default async function BlogPage() {
 
                     {/* Content */}
                     <div className="p-6 sm:p-7 flex flex-col flex-1">
-                      {formattedDate && (
-                        <div className="flex items-center gap-1.5 text-xs text-[#2C0054]/60 font-medium mb-3">
-                          <Calendar size={14} />
-                          <span>{formattedDate}</span>
+                      {(formattedDate || authorName) && (
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#2C0054]/75 font-medium mb-3">
+                          {formattedDate && (
+                            <div className="flex items-center gap-1.5">
+                              <Calendar size={13} className="text-[#F4B92A]" />
+                              <span>{formattedDate}</span>
+                            </div>
+                          )}
+                          {formattedDate && authorName && (
+                            <span className="text-[#2C0054]/30">•</span>
+                          )}
+                          {authorName && (
+                            <div className="flex items-center gap-1.5">
+                              <User size={13} className="text-[#F4B92A]" />
+                              <span>{authorName}</span>
+                            </div>
+                          )}
                         </div>
                       )}
 

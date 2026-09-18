@@ -157,11 +157,14 @@ export default async function BlogPostDetailPage({ params }: { params: Promise<{
     ? post.author.name 
     : 'Asesor TrazaMapas';
   const formattedDate = post.publishedAt 
-    ? new Date(post.publishedAt).toLocaleDateString('es-MX', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      })
+    ? (() => {
+        const d = new Date(post.publishedAt);
+        if (isNaN(d.getTime())) return null;
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+      })()
     : null;
 
   return (
@@ -175,10 +178,10 @@ export default async function BlogPostDetailPage({ params }: { params: Promise<{
             alt={post.title} 
             fill 
             unoptimized
-            className="object-cover object-center opacity-30 blur-sm"
+            className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2C0054]/95 via-[#2C0054]/85 to-[#2C0054]/70" />
+          <div className="absolute inset-0 bg-[#2C0054]/50" />
         </div>
 
         <div className="relative z-10 max-w-[1280px] mx-auto w-full">
@@ -213,19 +216,6 @@ export default async function BlogPostDetailPage({ params }: { params: Promise<{
         <div className="max-w-[1280px] mx-auto">
           
           <div className="bg-white border border-[#2c0054]/10 rounded-[24px] p-6 sm:p-10 lg:p-12 shadow-sm mb-12">
-            {/* Featured Image */}
-            {imageUrl && (
-              <div className="relative h-[320px] sm:h-[480px] w-full rounded-[20px] overflow-hidden mb-8 shadow-md">
-                <Image
-                  src={imageUrl}
-                  alt={post.title}
-                  fill
-                  unoptimized
-                  className="object-cover"
-                />
-              </div>
-            )}
-
             {/* Excerpt */}
             {post.excerpt && (
               <div className="bg-[#2C0054]/5 border-l-4 border-[#2C0054] p-5 rounded-r-xl text-[#2C0054] font-medium text-lg leading-relaxed mb-8 italic">

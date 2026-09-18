@@ -79,7 +79,7 @@ export default function FeaturedRoutesSection({ trips }: { trips: PayloadTrip[] 
               <div className="bg-white border border-[#2c0054]/15 rounded-[24px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between w-full group">
                 
                 {/* Image Header with Badge Overlay */}
-                <div className="relative h-[210px] w-full overflow-hidden shrink-0">
+                <Link href={`/viajes/${trip.slug}`} className="relative h-[210px] w-full overflow-hidden shrink-0 block cursor-pointer">
                   <Image 
                     src={getImageUrl(trip.featuredImage)} 
                     alt={trip.title} 
@@ -89,27 +89,24 @@ export default function FeaturedRoutesSection({ trips }: { trips: PayloadTrip[] 
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   />
                   
-                  {/* Soft Bottom Gradient Overlay for title legibility */}
-                  
-
-                                    {/* Top Right Location Pill */}
+                  {/* Top Right Location Pill */}
                   <div className="absolute top-3.5 right-3.5 z-10 max-w-[calc(100%-28px)]">
                     <span className="px-3 py-1.5 rounded-full text-[11px] font-bold bg-[#2C0054] text-white inline-flex items-center gap-1.5 shadow-md max-w-full">
                       <MapPin size={12} className="text-[#F4B92A] shrink-0" />
                       <span className="truncate">{trip.location}</span>
                     </span>
                   </div>
-
-                  
-                </div>
+                </Link>
 
                 {/* Card Body Content */}
                 <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
                   
                   <div>
-                                        {/* Title */}
+                    {/* Title */}
                     <h3 className="text-[19px] sm:text-[20px] font-heading font-bold text-[#2C0054] leading-snug mb-3.5 line-clamp-2 group-hover:text-[#F4B92A] transition-colors">
-                      {trip.title}
+                      <Link href={`/viajes/${trip.slug}`} className="hover:text-[#F4B92A] transition-colors">
+                        {trip.title}
+                      </Link>
                     </h3>
 
                     {/* Description Paragraph (15px) */}

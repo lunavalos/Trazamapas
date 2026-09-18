@@ -4,23 +4,22 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import QuoteFormSection from "@/components/QuoteFormSection";
 
-export default function ContactClient({ categories }: { categories: any[] }) {
+export default function ContactClient({ categories, trips }: { categories: any[]; trips?: any[] }) {
   return (
     <main className="flex flex-col min-h-screen bg-[#f7f5f8]">
       
       {/* 1. HERO SECTION CONTACTO (Matching Disney Hero style) */}
       <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-20 sm:pb-24 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
-        {/* Background Image with Dark Purple Gradient Overlay */}
+        {/* Background Image with 0.5 Overlay */}
         <div className="absolute inset-0 z-0">
           <Image 
             src="/images/04_desfile_personajes_disneyland_california.webp" 
             alt="Contacto TrazaMapas Agencia de Viajes" 
             fill 
-            className="object-cover object-center opacity-60"
+            className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2C0054]/95 via-[#2C0054]/80 to-[#2C0054]/50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2C0054]/90 via-transparent to-[#2C0054]/60" />
+          <div className="absolute inset-0 bg-[#2C0054]/50" />
         </div>
 
         <div className="relative z-10 max-w-[1280px] mx-auto w-full">
@@ -35,14 +34,14 @@ export default function ContactClient({ categories }: { categories: any[] }) {
             </h1>
 
             <p className="text-white/90 text-[15px] sm:text-[16px] font-sans font-light leading-relaxed">
-              Estamos listos para hacer realidad tu prÃ³ximo viaje. EscrÃ­benos, llÃ¡manos o visÃ­tanos en nuestra sucursal al norte de Saltillo para diseÃ±ar juntos tu itinerario soÃ±ado.
+              Estamos listos para hacer realidad tu próximo viaje. Escríbenos, llámanos o visítanos en nuestra sucursal al norte de Saltillo para diseñar juntos tu itinerario soñado.
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* 2. QUOTE & CONTACT FORM SECTION (Joined 2-Column Design) */}
-      <QuoteFormSection variant="contactPage" categories={categories} />
+      <QuoteFormSection variant="contactPage" categories={categories} trips={trips} />
 
     </main>
   );

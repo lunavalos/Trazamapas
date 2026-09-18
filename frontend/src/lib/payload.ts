@@ -28,8 +28,10 @@ export function getImageUrl(image: any): string {
   
   let rawUrl = typeof image === 'string' ? image : image?.url;
   
-  if (!rawUrl && image?.filename) {
+  if (image?.filename) {
     rawUrl = `/media/${image.filename}`;
+  } else if (rawUrl && rawUrl.startsWith('/api/media/file/')) {
+    rawUrl = rawUrl.replace('/api/media/file/', '/media/');
   }
 
   if (!rawUrl) return '/images/04_desfile_personajes_disneyland_california.webp';
@@ -47,41 +49,36 @@ export function getCategoryName(category: any): string {
   return category?.name || category?.title || 'Consejos de Viaje';
 }
 
-export async function getPosts(): Promise<PayloadPost[]> {
+async function safeJsonFetch<T>(url: string, init?: RequestInit): Promise<T | null> {
   try {
-    const res = await fetch(`${PAYLOAD_API_URL}/api/posts?depth=2&sort=-publishedAt`, {
-      cache: 'no-store',
-    });
-
-    if (!res.ok) {
-      return [];
+    const res = await fetch(url, init);
+    if (!res.ok) return null;
+    const contentType = res.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      return null;
     }
-
-    const data = await res.json();
-    return data.docs || [];
+    return (await res.json()) as T;
   } catch (error) {
-    console.error('Error fetching posts from Payload CMS:', error);
-    return [];
+    console.error(`Error fetching from ${url}:`, error);
+    return null;
   }
 }
 
+export async function getPosts(): Promise<PayloadPost[]> {
+  const data = await safeJsonFetch<{ docs?: PayloadPost[] }>(
+    `${PAYLOAD_API_URL}/api/posts?depth=2&sort=-publishedAt`,
+    { cache: 'no-store' }
+  );
+  return data?.docs || [];
+}
+
 export async function getPostBySlug(slug: string): Promise<PayloadPost | null> {
-  try {
-    // Search both draft and published posts so Live Preview in admin always finds the post
-    const res = await fetch(`${PAYLOAD_API_URL}/api/posts?depth=2&where[slug][equals]=${slug}&limit=1&draft=true`, {
-      cache: 'no-store',
-    });
-
-    if (!res.ok) {
-      return null;
-    }
-
-    const data = await res.json();
-    return data.docs?.[0] || null;
-  } catch (error) {
-    console.error(`Error fetching post ${slug} from Payload CMS:`, error);
-    return null;
-  }
+  // Search both draft and published posts so Live Preview in admin always finds the post
+  const data = await safeJsonFetch<{ docs?: PayloadPost[] }>(
+    `${PAYLOAD_API_URL}/api/posts?depth=2&where[slug][equals]=${slug}&limit=1&draft=true`,
+    { cache: 'no-store' }
+  );
+  return data?.docs?.[0] || null;
 }
 
 export interface PayloadTripCategory {
@@ -103,47 +100,30 @@ export interface PayloadTrip {
   longDesc?: any;
   features?: { feature: string; id?: string }[];
   featuredImage?: any;
+  gallery?: any[];
   categories?: PayloadTripCategory[] | string[] | number[];
 }
 
 export async function getTrips(): Promise<PayloadTrip[]> {
-  try {
-    const res = await fetch(`${PAYLOAD_API_URL}/api/trips?depth=2&limit=100`, {
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.docs || [];
-  } catch (error) {
-    console.error('Error fetching trips:', error);
-    return [];
-  }
+  const data = await safeJsonFetch<{ docs?: PayloadTrip[] }>(
+    `${PAYLOAD_API_URL}/api/trips?depth=2&limit=100`,
+    { cache: 'no-store' }
+  );
+  return data?.docs || [];
 }
 
 export async function getTripBySlug(slug: string): Promise<PayloadTrip | null> {
-  try {
-    const res = await fetch(`${PAYLOAD_API_URL}/api/trips?where[slug][equals]=${slug}&depth=2`, {
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.docs?.[0] || null;
-  } catch (error) {
-    console.error('Error fetching trip by slug:', error);
-    return null;
-  }
+  const data = await safeJsonFetch<{ docs?: PayloadTrip[] }>(
+    `${PAYLOAD_API_URL}/api/trips?where[slug][equals]=${slug}&depth=2`,
+    { cache: 'no-store' }
+  );
+  return data?.docs?.[0] || null;
 }
 
 export async function getTripCategories(): Promise<PayloadTripCategory[]> {
-  try {
-    const res = await fetch(`${PAYLOAD_API_URL}/api/trip-categories?limit=100`, {
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.docs || [];
-  } catch (error) {
-    console.error('Error fetching trip categories:', error);
-    return [];
-  }
+  const data = await safeJsonFetch<{ docs?: PayloadTripCategory[] }>(
+    `${PAYLOAD_API_URL}/api/trip-categories?limit=100`,
+    { next: { revalidate: 3600 } }
+  );
+  return data?.docs || [];
 }

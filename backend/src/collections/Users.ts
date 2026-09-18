@@ -24,7 +24,7 @@ export const Users: CollectionConfig = {
   auth: true,
   access: {
     create: isAdmin,
-    read: isAdminOrSelf,
+    read: () => true,
     update: isAdminOrSelf,
     delete: isAdmin,
   },
@@ -46,7 +46,7 @@ export const Users: CollectionConfig = {
         { label: 'Usuario Normal / Editor (Solo edita su propio usuario)', value: 'user' },
       ],
       access: {
-        // Only admins can change user roles
+        read: ({ req: { user } }) => Boolean(user && user.role === 'admin'),
         create: ({ req: { user } }) => !user || user.role === 'admin',
         update: ({ req: { user } }) => Boolean(user && user.role === 'admin'),
       },
