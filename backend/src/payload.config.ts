@@ -16,8 +16,15 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 export default buildConfig({
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 'https://trazamapas-back.vercel.app',
   cors: '*',
-  csrf: ['http://localhost:3000', 'http://localhost:3001'],
+  csrf: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://trazamapas-back.vercel.app',
+    ...(process.env.NEXT_PUBLIC_SERVER_URL ? [process.env.NEXT_PUBLIC_SERVER_URL] : []),
+    ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+  ],
   admin: {
     user: Users.slug,
     meta: {
