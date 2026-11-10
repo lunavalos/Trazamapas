@@ -25,7 +25,7 @@ export default async function BlogPage() {
     <main className="flex flex-col min-h-screen bg-[#f7f5f8]">
       
       {/* 1. HERO SECTION BLOG */}
-      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-20 sm:pb-24 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
+      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-28 sm:pb-36 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
         {/* Background Image with 0.5 Overlay */}
         <div className="absolute inset-0 z-0">
           <Image 
@@ -52,7 +52,7 @@ export default async function BlogPage() {
       </section>
 
       {/* 2. BLOG POSTS LISTING / FALLBACK SECTION */}
-      <section className="py-[80px] px-5 sm:px-8 relative bg-[#f7f5f8]">
+      <section className="py-[140px] sm:py-[160px] px-5 sm:px-8 relative bg-[#f7f5f8]">
         <div className="max-w-[1280px] mx-auto">
           
           {posts && posts.length > 0 ? (

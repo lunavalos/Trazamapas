@@ -72,7 +72,9 @@ export interface Config {
     categories: Category;
     posts: Post;
     'trip-categories': TripCategory;
+    'trip-operators': TripOperator;
     trips: Trip;
+    documents: Document;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -85,7 +87,9 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     'trip-categories': TripCategoriesSelect<false> | TripCategoriesSelect<true>;
+    'trip-operators': TripOperatorsSelect<false> | TripOperatorsSelect<true>;
     trips: TripsSelect<false> | TripsSelect<true>;
+    documents: DocumentsSelect<false> | DocumentsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -327,6 +331,21 @@ export interface TripCategory {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trip-operators".
+ */
+export interface TripOperator {
+  id: number;
+  title: string;
+  /**
+   * Se generará automáticamente (ej. mega-travel, nefertari, eme-travel).
+   */
+  value?: string | null;
+  logo?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "trips".
  */
 export interface Trip {
@@ -337,9 +356,16 @@ export interface Trip {
    */
   slug: string;
   categories: (number | TripCategory)[];
+  operator?: (number | null) | TripOperator;
   location: string;
   duration: string;
   bestTime: string;
+  price?: string | null;
+  airline?: string | null;
+  /**
+   * Si se deja el valor por defecto, mostrará la leyenda estándar. Puedes personalizarla por viaje si aplica.
+   */
+  termsAndConditions?: string | null;
   featuredImage: number | Media;
   /**
    * Imágenes complementarias para la galería del viaje.
@@ -367,6 +393,35 @@ export interface Trip {
   }[];
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents".
+ */
+export interface Document {
+  id: number;
+  title: string;
+  documentType: 'rnt' | 'sat' | 'certificado' | 'otro';
+  /**
+   * Texto que se mostrará en el sitio web (ej. 2026, 2027, etc.).
+   */
+  vigencia?: string | null;
+  /**
+   * Activa esta casilla para que este documento se muestre en el botón RNT del navbar.
+   */
+  isCurrent?: boolean | null;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -413,8 +468,16 @@ export interface PayloadLockedDocument {
         value: number | TripCategory;
       } | null)
     | ({
+        relationTo: 'trip-operators';
+        value: number | TripOperator;
+      } | null)
+    | ({
         relationTo: 'trips';
         value: number | Trip;
+      } | null)
+    | ({
+        relationTo: 'documents';
+        value: number | Document;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -624,15 +687,30 @@ export interface TripCategoriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "trip-operators_select".
+ */
+export interface TripOperatorsSelect<T extends boolean = true> {
+  title?: T;
+  value?: T;
+  logo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "trips_select".
  */
 export interface TripsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   categories?: T;
+  operator?: T;
   location?: T;
   duration?: T;
   bestTime?: T;
+  price?: T;
+  airline?: T;
+  termsAndConditions?: T;
   featuredImage?: T;
   gallery?: T;
   shortDesc?: T;
@@ -645,6 +723,28 @@ export interface TripsSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents_select".
+ */
+export interface DocumentsSelect<T extends boolean = true> {
+  title?: T;
+  documentType?: T;
+  vigencia?: T;
+  isCurrent?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

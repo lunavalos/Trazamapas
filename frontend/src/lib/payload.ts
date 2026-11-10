@@ -21,7 +21,7 @@ export interface PayloadPost {
   } | string | number;
 }
 
-const PAYLOAD_API_URL = process.env.NEXT_PUBLIC_PAYLOAD_URL || 'http://localhost:3001';
+const PAYLOAD_API_URL = process.env.NEXT_PUBLIC_PAYLOAD_URL || 'https://trazamapas-back.vercel.app';
 
 export function getImageUrl(image: any): string {
   if (!image) return '/images/04_desfile_personajes_disneyland_california.webp';
@@ -51,7 +51,14 @@ export function getCategoryName(category: any): string {
 
 async function safeJsonFetch<T>(url: string, init?: RequestInit): Promise<T | null> {
   try {
-    const res = await fetch(url, init);
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timeoutId = controller ? setTimeout(() => controller.abort(), 4000) : null;
+
+    const res = await fetch(url, {
+      ...init,
+      signal: init?.signal || controller?.signal,
+    });
+    if (timeoutId) clearTimeout(timeoutId);
     if (!res.ok) return null;
     const contentType = res.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
@@ -59,7 +66,7 @@ async function safeJsonFetch<T>(url: string, init?: RequestInit): Promise<T | nu
     }
     return (await res.json()) as T;
   } catch (error) {
-    console.error(`Error fetching from ${url}:`, error);
+    console.warn(`[Payload API] Could not fetch from ${url}:`, (error as Error)?.message || error);
     return null;
   }
 }
@@ -89,6 +96,13 @@ export interface PayloadTripCategory {
   image?: any;
 }
 
+export interface PayloadTripOperator {
+  id: string | number;
+  title: string;
+  value: string;
+  logo?: any;
+}
+
 export interface PayloadTrip {
   id: string | number;
   title: string;
@@ -96,12 +110,16 @@ export interface PayloadTrip {
   location: string;
   duration: string;
   bestTime: string;
+  price?: string;
+  airline?: string;
+  termsAndConditions?: string;
   shortDesc: string;
   longDesc?: any;
   features?: { feature: string; id?: string }[];
   featuredImage?: any;
   gallery?: any[];
   categories?: PayloadTripCategory[] | string[] | number[];
+  operator?: PayloadTripOperator | string | number;
 }
 
 export async function getTrips(): Promise<PayloadTrip[]> {
@@ -123,7 +141,52 @@ export async function getTripBySlug(slug: string): Promise<PayloadTrip | null> {
 export async function getTripCategories(): Promise<PayloadTripCategory[]> {
   const data = await safeJsonFetch<{ docs?: PayloadTripCategory[] }>(
     `${PAYLOAD_API_URL}/api/trip-categories?limit=100`,
-    { next: { revalidate: 3600 } }
+    { cache: 'no-store' }
   );
   return data?.docs || [];
+}
+
+export async function getTripOperators(): Promise<PayloadTripOperator[]> {
+  const data = await safeJsonFetch<{ docs?: PayloadTripOperator[] }>(
+    `${PAYLOAD_API_URL}/api/trip-operators?limit=100`,
+    { cache: 'no-store' }
+  );
+  return data?.docs || [];
+}
+
+export interface PayloadDocument {
+  id: string | number;
+  title: string;
+  documentType: string;
+  vigencia?: string;
+  isCurrent?: boolean;
+  url?: string;
+  filename?: string;
+  filesize?: number;
+}
+
+export async function getActiveRntDocument(): Promise<{ url: string; vigencia?: string } | null> {
+  const data = await safeJsonFetch<{ docs?: PayloadDocument[] }>(
+    `${PAYLOAD_API_URL}/api/documents?where[documentType][equals]=rnt&where[isCurrent][equals]=true&limit=1`,
+    { next: { revalidate: 60 } }
+  );
+
+  const doc = data?.docs?.[0];
+  if (!doc) return null;
+
+  let rawUrl = doc.url;
+  if (doc.filename && !rawUrl) {
+    rawUrl = `/documents/${doc.filename}`;
+  }
+
+  if (!rawUrl) return null;
+
+  if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://')) {
+    return { url: rawUrl, vigencia: doc.vigencia || '2026' };
+  }
+
+  return {
+    url: `${PAYLOAD_API_URL}${rawUrl}`,
+    vigencia: doc.vigencia || '2026',
+  };
 }

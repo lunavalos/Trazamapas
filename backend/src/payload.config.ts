@@ -10,7 +10,9 @@ import { Media } from './collections/Media';
 import { Categories } from './collections/Categories';
 import { Posts } from './collections/Posts';
 import { TripCategories } from './collections/TripCategories';
+import { TripOperators } from './collections/TripOperators';
 import { Trips } from './collections/Trips';
+import { Documents } from './collections/Documents';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -32,7 +34,7 @@ export default buildConfig({
       icons: [{ rel: 'icon', type: 'image/x-icon', url: '/images/favicon.ico' }],
     },
   },
-  collections: [Users, Media, Categories, Posts, TripCategories, Trips],
+  collections: [Users, Media, Categories, Posts, TripCategories, TripOperators, Trips, Documents],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || 'trazamapas-payload-secret-key-2026-secure',
   typescript: {

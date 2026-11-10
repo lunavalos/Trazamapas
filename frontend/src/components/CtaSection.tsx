@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 export default function CtaSection() {
   return (
-    <section className="py-[60px] px-5 sm:px-8 relative bg-[#f7f5f8]">
+    <section className="py-[120px] sm:py-[140px] px-5 sm:px-8 relative bg-[#f7f5f8]">
       <div className="max-w-[1280px] mx-auto">
         
         {/* Inner Purple Banner */}

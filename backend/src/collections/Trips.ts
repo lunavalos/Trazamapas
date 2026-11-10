@@ -50,6 +50,14 @@ export const Trips: CollectionConfig = {
       label: 'Categorias',
     },
     {
+      name: 'operator',
+      type: 'relationship',
+      relationTo: 'trip-operators',
+      hasMany: false,
+      required: false,
+      label: 'Operador (Ej. Mega Travel, Nefertari, Eme Travel)',
+    },
+    {
       name: 'location',
       type: 'text',
       required: true,
@@ -66,6 +74,30 @@ export const Trips: CollectionConfig = {
       type: 'text',
       required: true,
       label: 'Mejor epoca para viajar (Ej. Todo el Ano)',
+    },
+    {
+      name: 'price',
+      type: 'text',
+      required: false,
+      label: 'Precio (Ej. Desde $1,599 USD + $899 USD IMP.)',
+    },
+    {
+      name: 'airline',
+      type: 'text',
+      required: false,
+      label: 'Aerolinea (Ej. Aeromexico)',
+    },
+    {
+      name: 'termsAndConditions',
+      type: 'textarea',
+      required: false,
+      label: 'Terminos y Condiciones',
+      defaultValue:
+        'Precios por persona en habitación doble o triple (DBL ó TPL P/P). Suplemento según fecha de salida. Tarifas sujetas a disponibilidad y cambios sin previo aviso.',
+      admin: {
+        description:
+          'Si se deja el valor por defecto, mostrará la leyenda estándar. Puedes personalizarla por viaje si aplica.',
+      },
     },
     {
       name: 'featuredImage',

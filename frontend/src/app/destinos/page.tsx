@@ -15,7 +15,7 @@ const DESTINOS = [
 export default function DestinosPage() {
   return (
     <main className="flex flex-col min-h-screen bg-[#f7f5f8] pb-24">
-      <section className="pt-24 pb-16 px-6 max-w-[1200px] mx-auto text-center">
+      <section className="pt-36 sm:pt-40 pb-24 px-6 max-w-[1200px] mx-auto text-center">
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -34,7 +34,7 @@ export default function DestinosPage() {
         </motion.p>
       </section>
 
-      <section className="px-6 max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <section className="px-6 max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-28">
         {DESTINOS.map((dest, i) => (
           <motion.div 
             key={i} 

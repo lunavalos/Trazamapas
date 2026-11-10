@@ -31,7 +31,7 @@ export default function DisneyPage() {
     <main className="flex flex-col min-h-screen bg-[#f7f5f8]">
       
       {/* 1. HERO SECTION DISNEY */}
-      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-20 sm:pb-24 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
+      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-28 sm:pb-36 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
         {/* Background Image with 0.5 Overlay */}
         <div className="absolute inset-0 z-0">
           <Image 
@@ -56,14 +56,14 @@ export default function DisneyPage() {
             </h1>
 
             <p className="text-white/90 text-[15px] sm:text-[16px] font-sans font-light leading-relaxed">
-              Planear tu viaje a Disney es el primer paso para vivir un sueño inolvidable. Te asesoramos como <strong>Agentes Certificados Disney</strong> para diseñar cada detalle de tu itinerario y aprovechar al máximo cada momento en los parques.
+              Planear tu viaje a Disney es el primer paso para vivir un sueño inolvidable. Te asesoramos como <strong>Agentes Certificados Disney y Universal</strong> para diseñar cada detalle de tu itinerario y aprovechar al máximo cada momento en los parques.
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* 2. INTERACTIVE MAP SECTION (6 GLOBAL DESTINATIONS) */}
-      <section className="py-[80px] px-5 sm:px-8 relative bg-[#f7f5f8]">
+      <section className="py-[140px] sm:py-[160px] px-5 sm:px-8 relative bg-[#f7f5f8]">
         <div className="max-w-[1280px] mx-auto">
           
           <div className="text-left max-w-3xl mb-12">
@@ -85,7 +85,7 @@ export default function DisneyPage() {
       </section>
 
       {/* 3. DETAILED DISNEYLAND RESORT CALIFORNIA CONTENT (CONDENSED & OPTIMIZED) */}
-      <section className="py-[60px] px-5 sm:px-8 relative bg-surface-white border-y border-[#2c0054]/15">
+      <section className="py-[120px] sm:py-[140px] px-5 sm:px-8 relative bg-surface-white border-y border-[#2c0054]/15">
         <div className="max-w-[1280px] mx-auto space-y-16 sm:space-y-20">
           
           {/* Main Section Header */}
@@ -323,7 +323,7 @@ export default function DisneyPage() {
       </section>
 
       {/* 4. WHY BOOK WITH DISNEY CERTIFIED AGENTS */}
-      <section className="py-[80px] px-5 sm:px-8 relative bg-[#f7f5f8]">
+      <section className="py-[140px] sm:py-[160px] px-5 sm:px-8 relative bg-[#f7f5f8]">
         <div className="max-w-[1280px] mx-auto">
           
           <motion.div 
@@ -356,10 +356,10 @@ export default function DisneyPage() {
                   <Award size={25} />
                 </div>
                 <h3 className="text-lg font-heading font-bold text-brand-primary mb-2.5">
-                  Agentes Certificados Disney
+                  Agentes Certificados Disney y Universal
                 </h3>
                 <p className="text-smoke text-[15px] font-sans font-light leading-relaxed">
-                  Capacitación continua directo con la marca Disney para asesorarte en la mejor fecha y distribución de parques.
+                  Capacitación continua directo con Disney y Universal para asesorarte en la mejor fecha y distribución de parques.
                 </p>
               </div>
             </motion.div>
@@ -433,7 +433,7 @@ export default function DisneyPage() {
       </section>
 
       {/* 5. LOCATION & CONTACT CALLOUT (INNER PURPLE BANNER: py-[80px] px-[30px]) */}
-      <section className="py-[60px] px-5 sm:px-8 relative bg-surface-white border-t border-[#2c0054]/15">
+      <section className="py-[120px] sm:py-[140px] px-5 sm:px-8 relative bg-surface-white border-t border-[#2c0054]/15">
         <div className="max-w-[1280px] mx-auto">
           
           {/* Inner Purple Banner */}
@@ -454,7 +454,7 @@ export default function DisneyPage() {
               </h2>
 
               <p className="text-white/85 text-[15px] font-sans font-light leading-relaxed mb-6">
-                Visítanos en nuestra oficina en <strong>Av. La Salle #437</strong> (frente al Colegio La Salle en Saltillo) o cotiza directamente con nuestros Agentes Certificados Disney vía WhatsApp.
+                Visítanos en nuestra oficina en <strong>Av. La Salle #437</strong> (frente al Colegio La Salle en Saltillo) o cotiza directamente con nuestros Agentes Certificados Disney y Universal vía WhatsApp.
               </p>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-xs font-medium text-white/80 pt-4 border-t border-white/15">

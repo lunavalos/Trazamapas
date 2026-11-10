@@ -53,19 +53,19 @@ export default function AboutIntroSection() {
             </h2>
 
             <p className="text-smoke text-[15px] font-sans font-light leading-relaxed mb-5">
-              Aperturamos el 15 de noviembre de 2019 al norte de Saltillo bajo el nombre de ZIVA Travel La Salle. En noviembre de 2024 dimos el paso para consolidar nuestra identidad propia: TrazaMapas.
+              Desde el 15 de noviembre de 2019 al norte de Saltillo, en TrazaMapas nos dedicamos con pasión a diseñar experiencias de viaje memorables, con atención personalizada y sin complicaciones.
             </p>
 
             <p className="text-smoke text-[15px] font-sans font-light leading-relaxed mb-7">
-              Vendemos viajes nacionales e internacionales, vuelos, resorts todo incluido, cruceros, seguros de viaje e Internet eSIM. Nuestro gran fuerte es la magia Disney: todos nuestros asesores son Agentes Certificados Disney.
+              Vendemos viajes nacionales e internacionales, vuelos, resorts todo incluido, cruceros, seguros de viaje e Internet eSIM. Nuestro gran fuerte son los parques temáticos: todos nuestros asesores son Agentes Certificados Disney y Universal.
             </p>
 
             {/* Perfect 2x2 Grid (4 elements: 3 info items + 1 highlighted button at bottom-right) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              {/* Top Left: Agentes Certificados Disney */}
+              {/* Top Left: Agentes Certificados Disney y Universal */}
               <div className="flex items-center gap-3 bg-surface-white border border-[#2c0054]/15 rounded-[14px] p-3.5 shadow-xs">
                 <Award size={18} className="text-[#F4B92A] shrink-0" />
-                <span className="text-brand-primary font-semibold text-xs sm:text-sm">Agentes Certificados Disney</span>
+                <span className="text-brand-primary font-semibold text-xs sm:text-sm">Agentes Certificados Disney y Universal</span>
               </div>
 
               {/* Top Right: Garantía & Confianza */}

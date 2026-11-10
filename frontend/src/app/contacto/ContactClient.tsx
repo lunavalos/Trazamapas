@@ -9,7 +9,7 @@ export default function ContactClient({ categories, trips }: { categories: any[]
     <main className="flex flex-col min-h-screen bg-[#f7f5f8]">
       
       {/* 1. HERO SECTION CONTACTO (Matching Disney Hero style) */}
-      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-20 sm:pb-24 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
+      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-28 sm:pb-36 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
         {/* Background Image with 0.5 Overlay */}
         <div className="absolute inset-0 z-0">
           <Image 

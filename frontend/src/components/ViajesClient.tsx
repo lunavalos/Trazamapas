@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,23 +17,27 @@ import {
   CreditCard,
   FerrisWheel,
   RollerCoaster,
-  Castle
+  Castle,
+  Briefcase
 } from 'lucide-react';
-import { PayloadTrip, PayloadTripCategory, getImageUrl } from '@/lib/payload';
+import { PayloadTrip, PayloadTripCategory, PayloadTripOperator, getImageUrl } from '@/lib/payload';
 
 const ICONS: Record<string, any> = {
   Globe2, Ticket, Palmtree, Compass, Ship, Plane, MapPin, CreditCard, FerrisWheel, RollerCoaster, Castle
 };
 
 function ViajesContent({ 
-  initialCategories, 
-  trips 
+  initialCategories = [], 
+  initialOperators = [],
+  trips = []
 }: { 
   initialCategories: PayloadTripCategory[], 
+  initialOperators?: PayloadTripOperator[],
   trips: PayloadTrip[] 
 }) {
   const searchParams = useSearchParams();
-  const detailParam = searchParams.get('detalles');
+  const catParam = searchParams.get('categoria');
+  const opParam = searchParams.get('operador');
   
   // Agregamos "todos" estáticamente
   const categories = [
@@ -45,18 +49,48 @@ function ViajesContent({
     }))
   ];
 
-  const [activeCategory, setActiveCategory] = useState(searchParams.get('categoria') || 'todos');
+  const operators = [
+    { id: 'todos', label: 'Todos los Operadores' },
+    ...initialOperators.map(op => ({
+      id: op.value,
+      label: op.title,
+    }))
+  ];
 
-  const filteredTrips = activeCategory === 'todos' 
-    ? trips 
-    : trips.filter(trip => 
-        trip.categories?.some((c: any) => c.value === activeCategory)
-      );
+  const resolveValidCategory = (param: string | null) => {
+    if (!param) return 'todos';
+    const exists = initialCategories.some(c => c.value === param);
+    return exists ? param : 'todos';
+  };
+
+  const [activeCategory, setActiveCategory] = useState(() => resolveValidCategory(catParam));
+  const [activeOperator, setActiveOperator] = useState(opParam || 'todos');
+
+  useEffect(() => {
+    setActiveCategory(resolveValidCategory(catParam));
+    setActiveOperator(opParam || 'todos');
+  }, [catParam, opParam, initialCategories]);
+
+  const filteredTrips = trips.filter(trip => {
+    const matchesCategory =
+      activeCategory === 'todos' ||
+      trip.categories?.some((c: any) => (typeof c === 'object' ? c.value : c) === activeCategory);
+
+    const tripOpValue =
+      typeof trip.operator === 'object' && trip.operator !== null
+        ? trip.operator.value
+        : trip.operator;
+
+    const matchesOperator =
+      activeOperator === 'todos' || tripOpValue === activeOperator;
+
+    return matchesCategory && matchesOperator;
+  });
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f7f5f8] pb-24">
       {/* 1. HERO SECTION */}
-      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-20 sm:pb-24 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
+      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-28 sm:pb-36 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden min-h-[460px] flex items-center">
         <div className="absolute inset-0 z-0">
           <Image 
             src="/images/03_ tianas_bayou_adenture_disneyland_park_california.webp" 
@@ -79,37 +113,66 @@ function ViajesContent({
         </div>
       </section>
 
-      {/* 2. CATEGORY NAVIGATION */}
-      <section className="relative bg-white border-b border-[#2c0054]/10 shadow-sm py-[40px]">
-        <div className="max-w-[1280px] mx-auto px-5 sm:px-8 overflow-x-auto scrollbar-none">
-          <div className="flex items-center gap-3 min-w-max">
-            {categories.map((category) => {
-              const Icon = category.icon;
-              const isActive = activeCategory === category.id;
-              
-              return (
-                <button
-                  key={category.id}
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 cursor-pointer ${
-                    isActive 
-                      ? 'bg-[#2C0054] text-[#F4B92A] shadow-md border border-[#2C0054]' 
-                      : 'bg-white text-[#2C0054]/70 border border-[#2c0054]/15 hover:border-[#2C0054]/40 hover:text-[#2C0054] hover:bg-[#f7f5f8]'
-                  }`}
-                >
-                  <Icon size={16} className={isActive ? 'text-[#F4B92A]' : 'text-[#2C0054]/50'} />
-                  <span>{category.label}</span>
-                </button>
-              );
-            })}
+      {/* 2. CATEGORY & OPERATOR NAVIGATION */}
+      <section className="relative bg-white border-b border-[#2c0054]/10 shadow-sm py-[40px] sm:py-[50px]">
+        <div className="max-w-[1280px] mx-auto px-5 sm:px-8 flex flex-col gap-5">
+          <div className="overflow-x-auto scrollbar-none">
+            <div className="flex items-center gap-3 min-w-max">
+              {categories.map((category) => {
+                const Icon = category.icon;
+                const isActive = activeCategory === category.id;
+                
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => setActiveCategory(category.id)}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 cursor-pointer ${
+                      isActive 
+                        ? 'bg-[#2C0054] text-[#F4B92A] shadow-md border border-[#2C0054]' 
+                        : 'bg-white text-[#2C0054]/70 border border-[#2c0054]/15 hover:border-[#2C0054]/40 hover:text-[#2C0054] hover:bg-[#f7f5f8]'
+                    }`}
+                  >
+                    <Icon size={16} className={isActive ? 'text-[#F4B92A]' : 'text-[#2C0054]/50'} />
+                    <span>{category.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          {initialOperators.length > 0 && (
+            <div className="overflow-x-auto scrollbar-none pt-5 border-t border-[#2c0054]/10">
+              <div className="flex items-center gap-3 min-w-max">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#2C0054]/60 flex items-center gap-1.5 mr-2">
+                  <Briefcase size={14} className="text-[#F4B92A]" />
+                  Operador:
+                </span>
+                {operators.map((op) => {
+                  const isActive = activeOperator === op.id;
+                  return (
+                    <button
+                      key={op.id}
+                      onClick={() => setActiveOperator(op.id)}
+                      className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 cursor-pointer ${
+                        isActive
+                          ? 'bg-[#F4B92A] text-[#2C0054] shadow-xs border border-[#F4B92A]'
+                          : 'bg-[#f7f5f8] text-[#2C0054]/70 border border-[#2c0054]/10 hover:border-[#2C0054]/30 hover:text-[#2C0054]'
+                      }`}
+                    >
+                      {op.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
       {/* 3. EXPERIENCES GRID */}
-      <section className="py-[60px] px-5 sm:px-8 relative z-10">
+      <section className="py-[120px] sm:py-[140px] px-5 sm:px-8 relative z-10">
         <div className="max-w-[1280px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
             {filteredTrips.map((exp, index) => (
               <motion.article
                 key={exp.id || exp.slug}
@@ -117,64 +180,22 @@ function ViajesContent({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-surface-white border border-[#2c0054]/10 rounded-[24px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group"
+                className="bg-surface-white border border-[#2c0054]/10 rounded-[24px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 group"
               >
-                {/* Image Container */}
-                <Link href={`/viajes/${exp.slug}`} className="relative h-[220px] sm:h-[240px] w-full overflow-hidden block cursor-pointer">
+                <Link
+                  href={`/viajes/${exp.slug}`}
+                  className="block w-full overflow-hidden cursor-pointer"
+                  aria-label={exp.title}
+                >
                   <Image
                     src={getImageUrl(exp.featuredImage)}
                     alt={exp.title}
-                    fill
+                    width={exp.featuredImage?.width || 894}
+                    height={exp.featuredImage?.height || 1280}
                     unoptimized
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-auto block group-hover:scale-[1.03] transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  
-                  {/* Highlight Location Tag (Yellow) - Top Right */}
-                  <div className="absolute top-4 right-4 z-10 max-w-[calc(100%-2rem)] bg-[#F4B92A] text-[#2C0054] text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-sm flex items-center gap-1.5">
-                    <MapPin size={12} className="text-[#2C0054] shrink-0" />
-                    <span className="truncate">{exp.location}</span>
-                  </div>
                 </Link>
-
-                {/* Card Content */}
-                <div className="p-6 sm:p-7 flex flex-col flex-1">
-                  <h3 className="text-xl font-heading font-bold text-[#2C0054] mb-3 leading-snug line-clamp-2">
-                    <Link href={`/viajes/${exp.slug}`} className="hover:text-[#F4B92A] transition-colors">
-                      {exp.title}
-                    </Link>
-                  </h3>
-                  
-                  <p className="text-smoke text-[14px] font-sans font-light leading-relaxed mb-6 line-clamp-3 flex-1">
-                    {exp.shortDesc}
-                  </p>
-
-                  {/* Highlights / Features (Max 3) */}
-                  <ul className="space-y-2.5 mb-7 border-t border-[#2c0054]/10 pt-5">
-                    {exp.features?.slice(0, 3).map((feature: any, idx: number) => (
-                      <li key={idx} className="flex items-start gap-2 text-xs text-cinder font-sans">
-                        <CheckCircle2 size={14} className="text-[#2C0054]/40 shrink-0 mt-0.5" />
-                        <span className="line-clamp-2">{feature.feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* Action Buttons */}
-                  <div className="mt-auto grid grid-cols-2 gap-3">
-                    <Link
-                      href={`/viajes/${exp.slug}`}
-                      className="py-2.5 px-4 bg-[#f7f5f8] border border-[#2c0054]/15 text-[#2C0054] font-bold text-xs rounded-[12px] hover:bg-[#2C0054] hover:text-[#F4B92A] transition-all flex items-center justify-center cursor-pointer text-center"
-                    >
-                      Ver Detalles
-                    </Link>
-                    <Link
-                      href="/contacto"
-                      className="py-2.5 px-4 bg-[#2C0054] text-[#F4B92A] font-bold text-xs rounded-[12px] hover:bg-black transition-colors flex items-center justify-center shadow-md cursor-pointer text-center"
-                    >
-                      Cotizar
-                    </Link>
-                  </div>
-                </div>
               </motion.article>
             ))}
           </div>
@@ -190,7 +211,7 @@ function ViajesContent({
       </section>
       
       {/* 4. WORKFLOW / COMO FUNCIONA */}
-      <section className="py-[80px] bg-white border-t border-[#2c0054]/10">
+      <section className="py-[140px] sm:py-[160px] bg-white border-t border-[#2c0054]/10">
         <div className="max-w-[1280px] mx-auto px-5 sm:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-sm font-bold tracking-widest text-[#F4B92A] uppercase mb-2 block">Nuestro Proceso</span>

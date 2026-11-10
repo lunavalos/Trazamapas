@@ -171,7 +171,7 @@ export default async function BlogPostDetailPage({ params }: { params: Promise<{
     <main className="flex flex-col min-h-screen bg-[#f7f5f8]">
       
       {/* HERO SECTION */}
-      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-16 sm:pb-20 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden flex items-center min-h-[420px]">
+      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-24 sm:pb-32 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden flex items-center min-h-[420px]">
         <div className="absolute inset-0 z-0">
           <Image 
             src={imageUrl} 
@@ -212,7 +212,7 @@ export default async function BlogPostDetailPage({ params }: { params: Promise<{
       </section>
 
       {/* ARTICLE CONTENT BODY */}
-      <section className="py-12 sm:py-16 px-5 sm:px-8 relative bg-[#f7f5f8]">
+      <section className="py-[120px] sm:py-[140px] px-5 sm:px-8 relative bg-[#f7f5f8]">
         <div className="max-w-[1280px] mx-auto">
           
           <div className="bg-white border border-[#2c0054]/10 rounded-[24px] p-6 sm:p-10 lg:p-12 shadow-sm mb-12">

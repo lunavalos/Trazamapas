@@ -69,7 +69,7 @@ export default function TripGallery({ images, tripTitle }: TripGalleryProps) {
 
   return (
     <>
-      <section className="pt-8 sm:pt-10 pb-0 px-5 sm:px-8 relative bg-[#f7f5f8]">
+      <section className="pt-16 sm:pt-24 pb-0 px-5 sm:px-8 relative bg-[#f7f5f8]">
         <div className="max-w-[1280px] mx-auto">
           <div className="bg-white border border-[#2c0054]/10 rounded-[28px] p-6 sm:p-10 lg:p-12 shadow-sm">
             

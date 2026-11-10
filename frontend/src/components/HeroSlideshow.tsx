@@ -7,14 +7,14 @@ const SLIDES = [
   {
     image: '/images/04_desfile_personajes_disneyland_california.webp',
     alt: 'Desfile de personajes Disney',
-    title: 'Viaja sin límites por el mundo, trazamos la ruta de tu viaje.',
-    subtitle: 'TrazaMapas conecta tus deseos de viajar con experiencias perfectamente organizadas. Planea tus vacaciones, parques Disney y circuitos con agentes certificados.',
+    title: 'Trazamos el viaje de tus sueños',
+    subtitle: 'Conectamos tus deseos de viajar con experiencias perfectamente organizadas. Ya sea a destinos nacionales o internacionales, si viajas solo o acompañado, aquí te asesoramos.',
   },
   {
     image: '/images/06_cars_land_disneycalifornia_adventure.webp',
     alt: 'Cars Land Disney California Adventure',
     title: 'Vive la magia de Disney y Universal en los mejores destinos.',
-    subtitle: 'Somos Agentes Certificados Disney. Asesoría experta en hospedaje, boletos y estrategia de parques para una experiencia inolvidable.',
+    subtitle: 'Somos Agentes Certificados Disney y Universal. Asesoría experta en hospedaje, boletos y estrategia de parques para una experiencia inolvidable.',
   },
   {
     image: '/images/11_world_of_color.webp',
@@ -49,9 +49,8 @@ export default function HeroSlideshow() {
       {SLIDES.map((slide, index) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentIndex ? 'opacity-100 z-0' : 'opacity-0 pointer-events-none'
-          }`}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentIndex ? 'opacity-100 z-0' : 'opacity-0 pointer-events-none'
+            }`}
         >
           <Image
             src={slide.image}
@@ -60,13 +59,13 @@ export default function HeroSlideshow() {
             className="object-cover"
             priority={index === 0}
           />
-          {/* Semi-transparent brand purple overlay 0.5 */}
-          <div className="absolute inset-0 bg-[#2C0054]/50" />
+          {/* Semi-transparent black overlay 0.6 */}
+          <div className="absolute inset-0 bg-black/20" />
         </div>
       ))}
 
       {/* Navigation Arrow Left */}
-      <motion.button 
+      <motion.button
         whileHover={{ scale: 1.2 }}
         whileTap={{ scale: 0.9 }}
         onClick={handlePrev}
@@ -79,7 +78,7 @@ export default function HeroSlideshow() {
       </motion.button>
 
       {/* Navigation Arrow Right */}
-      <motion.button 
+      <motion.button
         whileHover={{ scale: 1.2 }}
         whileTap={{ scale: 0.9 }}
         onClick={handleNext}
@@ -110,7 +109,7 @@ export default function HeroSlideshow() {
                 width={320}
                 height={90}
                 className="h-[120px] sm:h-[140px] w-auto object-contain mb-1 drop-shadow-lg"
-                style={{ filter: 'brightness(0) invert(1)' }}
+                style={{ filter: 'brightness(0) invert(1)', width: 'auto' }}
                 priority
               />
             )}
@@ -119,18 +118,18 @@ export default function HeroSlideshow() {
             <h1 className="text-3xl sm:text-4xl lg:text-[50px] font-heading font-bold tracking-tight text-white mb-5 text-left leading-[1.18] drop-shadow-lg max-w-3xl">
               {SLIDES[currentIndex].title}
             </h1>
-            
+
             {/* Subtitle explicitly set to 18px */}
             <p className="text-[16px] sm:text-[18px] text-white/95 mb-8 font-sans font-light leading-relaxed text-left drop-shadow-md max-w-2xl">
               {SLIDES[currentIndex].subtitle}
             </p>
-            
+
             {/* CTA Button with standard site signature style (rounded-[14px], bold, hover transition, gold icon) */}
-            <motion.a 
+            <motion.a
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
-              href="https://wa.me/528443409914?text=Hola,%20quisiera%20planear%20un%20viaje" 
-              target="_blank" 
+              href="https://wa.me/528443409914?text=Hola,%20quisiera%20planear%20un%20viaje"
+              target="_blank"
               rel="noopener noreferrer"
               className="px-7 py-3.5 bg-white text-[#2C0054] font-bold text-sm sm:text-[15px] rounded-[14px] border border-white/20 hover:bg-[#f7f5f8] hover:border-[#F4B92A] transition-all duration-200 shadow-md inline-flex items-center gap-2.5 group cursor-pointer"
             >

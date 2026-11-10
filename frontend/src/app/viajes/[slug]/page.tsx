@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, MapPin, Clock, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Clock, CheckCircle2, Plane, Tag, Info, Briefcase } from 'lucide-react';
 import { getTripBySlug, getImageUrl } from '@/lib/payload';
 import CtaSection from '@/components/CtaSection';
 import TripGallery from '@/components/TripGallery';
@@ -77,7 +77,7 @@ export default async function TripDetailPage({ params }: { params: Promise<{ slu
   return (
     <main className="flex flex-col min-h-screen bg-[#f7f5f8]">
       {/* HERO SECTION */}
-      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-16 sm:pb-20 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden flex items-center min-h-[70vh]">
+      <section className="relative -mt-[104px] pt-[150px] sm:pt-[180px] pb-24 sm:pb-32 px-5 sm:px-8 bg-[#2C0054] text-white overflow-hidden flex items-center min-h-[70vh]">
         <div className="absolute inset-0 z-0">
           <Image 
             src={imageUrl} 
@@ -113,12 +113,12 @@ export default async function TripDetailPage({ params }: { params: Promise<{ slu
       </section>
 
       {/* ARTICLE CONTENT BODY */}
-      <section className="pt-12 sm:pt-16 pb-0 px-5 sm:px-8 relative bg-[#f7f5f8]">
+      <section className="pt-[100px] sm:pt-[130px] pb-0 px-5 sm:px-8 relative bg-[#f7f5f8]">
         <div className="max-w-[1280px] mx-auto">
           <div className="bg-white border border-[#2c0054]/10 rounded-[24px] p-6 sm:p-10 lg:p-12 shadow-sm">
             
             {/* Meta Bar */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5 bg-[#f7f5f8] rounded-[16px] border border-[#2c0054]/10 mb-8 sm:mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-5 bg-[#f7f5f8] rounded-[16px] border border-[#2c0054]/10 mb-8 sm:mb-10">
               <div className="flex items-center gap-3 text-sm text-cinder font-sans">
                 <Clock size={20} className="text-brand-primary shrink-0" />
                 <div>
@@ -133,16 +133,57 @@ export default async function TripDetailPage({ params }: { params: Promise<{ slu
                   <span>{trip.bestTime}</span>
                 </div>
               </div>
+              {trip.price && (
+                <div className="flex items-center gap-3 text-sm text-cinder font-sans">
+                  <Tag size={20} className="text-brand-primary shrink-0" />
+                  <div>
+                    <span className="font-bold block text-brand-primary">Precio:</span>
+                    <span className="font-semibold text-[#2C0054]">{trip.price}</span>
+                  </div>
+                </div>
+              )}
+              {trip.airline && (
+                <div className="flex items-center gap-3 text-sm text-cinder font-sans">
+                  <Plane size={20} className="text-brand-primary shrink-0" />
+                  <div>
+                    <span className="font-bold block text-brand-primary">Aerolínea:</span>
+                    <span>{trip.airline}</span>
+                  </div>
+                </div>
+              )}
+              {trip.operator && typeof trip.operator === 'object' && trip.operator.title && (
+                <div className="flex items-center gap-3 text-sm text-cinder font-sans">
+                  <Briefcase size={20} className="text-brand-primary shrink-0" />
+                  <div>
+                    <span className="font-bold block text-brand-primary">Operador:</span>
+                    <span>{trip.operator.title}</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Content & Features Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
               
               {/* Left Column: Long Description */}
-              <div className="lg:col-span-2">
-                <h3 className="text-2xl font-heading font-bold text-[#2C0054] mb-4 uppercase">Descripción del Viaje</h3>
-                <div className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-[#2C0054] prose-a:text-[#2C0054] prose-a:font-bold prose-img:rounded-xl">
-                  {renderContent(trip.longDesc)}
+              <div className="lg:col-span-2 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-2xl font-heading font-bold text-[#2C0054] mb-4 uppercase">Descripción del Viaje</h3>
+                  <div className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-[#2C0054] prose-a:text-[#2C0054] prose-a:font-bold prose-img:rounded-xl">
+                    {renderContent(trip.longDesc)}
+                  </div>
+                </div>
+
+                {/* Terms & Conditions Box */}
+                <div className="mt-8 p-4 sm:p-5 rounded-[16px] bg-[#f7f5f8] border border-[#2c0054]/10 flex items-start gap-3">
+                  <Info size={18} className="text-[#2C0054]/60 shrink-0 mt-0.5" />
+                  <div className="text-xs text-smoke font-sans leading-relaxed">
+                    <span className="font-bold text-[#2C0054] block mb-0.5">Términos y Condiciones:</span>
+                    <span>
+                      {trip.termsAndConditions ||
+                        'Precios por persona en habitación doble o triple (DBL ó TPL P/P). Suplemento según fecha de salida. Tarifas sujetas a disponibilidad y cambios sin previo aviso.'}
+                    </span>
+                  </div>
                 </div>
               </div>
 

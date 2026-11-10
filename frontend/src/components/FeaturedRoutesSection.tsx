@@ -76,59 +76,20 @@ export default function FeaturedRoutesSection({ trips }: { trips: PayloadTrip[] 
               transition={{ duration: 0.9, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="shrink-0 w-[285px] sm:w-[330px] snap-start flex"
             >
-              <div className="bg-white border border-[#2c0054]/15 rounded-[24px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between w-full group">
-                
-                {/* Image Header with Badge Overlay */}
-                <Link href={`/viajes/${trip.slug}`} className="relative h-[210px] w-full overflow-hidden shrink-0 block cursor-pointer">
-                  <Image 
-                    src={getImageUrl(trip.featuredImage)} 
-                    alt={trip.title} 
-                    fill 
-                    unoptimized
-                    className="object-cover group-hover:scale-105 transition-transform duration-700" 
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  />
-                  
-                  {/* Top Right Location Pill */}
-                  <div className="absolute top-3.5 right-3.5 z-10 max-w-[calc(100%-28px)]">
-                    <span className="px-3 py-1.5 rounded-full text-[11px] font-bold bg-[#2C0054] text-white inline-flex items-center gap-1.5 shadow-md max-w-full">
-                      <MapPin size={12} className="text-[#F4B92A] shrink-0" />
-                      <span className="truncate">{trip.location}</span>
-                    </span>
-                  </div>
-                </Link>
-
-                {/* Card Body Content */}
-                <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
-                  
-                  <div>
-                    {/* Title */}
-                    <h3 className="text-[19px] sm:text-[20px] font-heading font-bold text-[#2C0054] leading-snug mb-3.5 line-clamp-2 group-hover:text-[#F4B92A] transition-colors">
-                      <Link href={`/viajes/${trip.slug}`} className="hover:text-[#F4B92A] transition-colors">
-                        {trip.title}
-                      </Link>
-                    </h3>
-
-                    {/* Description Paragraph (15px) */}
-                    <p className="text-[#333] text-[15px] font-sans font-light leading-relaxed mb-6 line-clamp-3">
-                      {trip.shortDesc}
-                    </p>
-                  </div>
-
-                  {/* Card Bottom CTA Button without top border line */}
-                  <div className="pt-1">
-                    <Link
-                      href={`/viajes/${trip.slug}`}
-                      className="w-full py-3.5 px-4 bg-[#f3eff7] border border-[#2c0054]/15 rounded-[14px] text-[#2C0054] font-bold text-sm hover:bg-[#2C0054] hover:text-[#F4B92A] transition-all flex items-center justify-center gap-2.5 group/btn shadow-xs"
-                    >
-                      <span>Ver Detalles</span>
-                      <ArrowRight size={18} className="text-[#F4B92A] group-hover/btn:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-
-                </div>
-
-              </div>
+              <Link
+                href={`/viajes/${trip.slug}`}
+                aria-label={trip.title}
+                className="bg-white border border-[#2c0054]/15 rounded-[24px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1.5 block w-full group cursor-pointer"
+              >
+                <Image 
+                  src={getImageUrl(trip.featuredImage)} 
+                  alt={trip.title} 
+                  width={trip.featuredImage?.width || 894}
+                  height={trip.featuredImage?.height || 1280}
+                  unoptimized
+                  className="w-full h-auto block group-hover:scale-[1.03] transition-transform duration-700" 
+                />
+              </Link>
             </motion.div>
           ))}
         </div>
