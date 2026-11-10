@@ -74,7 +74,7 @@ function toLexicalRichText(input: string | string[]) {
   };
 }
 
-async function resolveMediaId(payload: any, imageRef: string, altText: string): Promise<number | string> {
+async function resolveMediaId(payload: any, imageRef: string, altText: string): Promise<number> {
   const baseName = path.basename(imageRef);
 
   const existing = await payload.find({
@@ -88,7 +88,7 @@ async function resolveMediaId(payload: any, imageRef: string, altText: string): 
   });
 
   if (existing.docs.length > 0) {
-    return existing.docs[0].id;
+    return Number(existing.docs[0].id);
   }
 
   const candidatePaths = [
@@ -119,7 +119,7 @@ async function resolveMediaId(payload: any, imageRef: string, altText: string): 
       },
       filePath: tmpFilePath,
     });
-    return createdMedia.id;
+    return Number(createdMedia.id);
   } finally {
     if (fs.existsSync(tmpFilePath)) {
       fs.unlinkSync(tmpFilePath);
@@ -127,8 +127,8 @@ async function resolveMediaId(payload: any, imageRef: string, altText: string): 
   }
 }
 
-async function resolveCategoryIds(payload: any, categories: string[]): Promise<(number | string)[]> {
-  const ids: (number | string)[] = [];
+async function resolveCategoryIds(payload: any, categories: string[]): Promise<number[]> {
+  const ids: number[] = [];
 
   for (const catRef of categories) {
     const slugRef = formatSlug(catRef);
@@ -145,7 +145,7 @@ async function resolveCategoryIds(payload: any, categories: string[]): Promise<(
     });
 
     if (found.docs.length > 0) {
-      ids.push(found.docs[0].id);
+      ids.push(Number(found.docs[0].id));
     } else {
       throw new Error(
         `No se encontró la categoría "${catRef}". Verifica que exista en Categorías de Viaje en Payload.`
@@ -156,7 +156,7 @@ async function resolveCategoryIds(payload: any, categories: string[]): Promise<(
   return ids;
 }
 
-async function resolveOperatorId(payload: any, operatorRef?: string): Promise<number | string | null> {
+async function resolveOperatorId(payload: any, operatorRef?: string): Promise<number | null> {
   if (!operatorRef || !operatorRef.trim()) return null;
 
   const slugRef = formatSlug(operatorRef);
@@ -173,7 +173,7 @@ async function resolveOperatorId(payload: any, operatorRef?: string): Promise<nu
   });
 
   if (found.docs.length > 0) {
-    return found.docs[0].id;
+    return Number(found.docs[0].id);
   }
 
   // Si no existe aún en la colección trip-operators, lo creamos automáticamente
@@ -184,7 +184,7 @@ async function resolveOperatorId(payload: any, operatorRef?: string): Promise<nu
       value: slugRef,
     },
   });
-  return created.id;
+  return Number(created.id);
 }
 
 async function main() {
@@ -213,7 +213,7 @@ async function main() {
     const operatorId = await resolveOperatorId(payload, item.operator);
     const featuredImageId = await resolveMediaId(payload, item.featuredImage, item.title);
 
-    const galleryIds: (number | string)[] = [];
+    const galleryIds: number[] = [];
     if (item.gallery && item.gallery.length > 0) {
       for (const galleryImg of item.gallery) {
         const gId = await resolveMediaId(payload, galleryImg, item.title);
@@ -221,7 +221,7 @@ async function main() {
       }
     }
 
-    const tripData = {
+    const tripData: any = {
       title: item.title,
       slug,
       categories: categoryIds,
