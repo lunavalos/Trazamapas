@@ -288,6 +288,8 @@ export default function QuoteFormSection({
   trips = [] 
 }: QuoteFormSectionProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -322,9 +324,38 @@ export default function QuoteFormSection({
   }, [trips]);
 
   const availableTrips = trips && trips.length > 0 ? trips : fetchedTrips;
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Ocurrió un error al enviar el mensaje.");
+      }
+
+      setSubmitted(true);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        service: "",
+        message: "",
+      });
+    } catch (err: any) {
+      setSubmitError(
+        err?.message || "No se pudo enviar el mensaje. Intenta de nuevo o escríbenos por WhatsApp."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isContactPage = variant === "contactPage";
@@ -601,14 +632,20 @@ export default function QuoteFormSection({
                   </div>
 
                   {/* Submit Button */}
+                  {submitError && (
+                    <div className="p-3.5 rounded-[12px] bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
+                      {submitError}
+                    </div>
+                  )}
                   <div className="pt-4">
                     <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+                      whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                      whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
                       type="submit"
-                      className="w-full py-3.5 px-7 bg-brand-primary text-white font-bold text-sm rounded-[14px] hover:bg-[#3d0075] border border-brand-primary transition shadow-md flex items-center justify-center gap-2.5 group cursor-pointer"
+                      disabled={isSubmitting}
+                      className="w-full py-3.5 px-7 bg-brand-primary text-white font-bold text-sm rounded-[14px] hover:bg-[#3d0075] disabled:opacity-70 disabled:cursor-not-allowed border border-brand-primary transition shadow-md flex items-center justify-center gap-2.5 group cursor-pointer"
                     >
-                      <span>Enviar Mensaje</span>
+                      <span>{isSubmitting ? "Enviando..." : "Enviar Mensaje"}</span>
                       <ArrowRight size={18} className="text-[#F4B92A] group-hover:translate-x-1 transition-transform shrink-0" />
                     </motion.button>
                   </div>
@@ -868,14 +905,20 @@ export default function QuoteFormSection({
                   </div>
 
                   {/* Submit Button */}
+                  {submitError && (
+                    <div className="p-3.5 rounded-[12px] bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
+                      {submitError}
+                    </div>
+                  )}
                   <div className="pt-2">
                     <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+                      whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                      whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
                       type="submit"
-                      className="w-full py-3.5 px-7 bg-brand-primary text-white font-bold text-sm rounded-[14px] hover:bg-[#3d0075] border border-brand-primary transition shadow-md flex items-center justify-center gap-2.5 group cursor-pointer"
+                      disabled={isSubmitting}
+                      className="w-full py-3.5 px-7 bg-brand-primary text-white font-bold text-sm rounded-[14px] hover:bg-[#3d0075] disabled:opacity-70 disabled:cursor-not-allowed border border-brand-primary transition shadow-md flex items-center justify-center gap-2.5 group cursor-pointer"
                     >
-                      <span>Enviar Mensaje</span>
+                      <span>{isSubmitting ? "Enviando..." : "Enviar Mensaje"}</span>
                       <ArrowRight size={18} className="text-[#F4B92A] group-hover:translate-x-1 transition-transform shrink-0" />
                     </motion.button>
                   </div>
